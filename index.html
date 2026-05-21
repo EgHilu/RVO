@@ -393,15 +393,15 @@ select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' 
 
     <div class="action-btn" id="btnGaleria">
       <input type="file" accept="image/*" multiple onchange="handleFotos(event)">
-      <div class="btn-icon">🖼</div>
+      <div class="btn-icon" id="galeriaIcon">🖼</div>
       <div class="btn-text-wrap">
         <div class="btn-label">Selecionar da galeria</div>
-        <div class="btn-hint">Escolha múltiplas fotos</div>
+        <div class="btn-hint" id="galeriaHint">Escolha múltiplas fotos</div>
       </div>
       <div id="fotoCount" class="btn-count" style="display:none">0</div>
       <div class="btn-arrow">›</div>
     </div>
-    <div class="file-pills" id="fotoPills"></div>
+    <div id="fotoPills"></div>
 
     <!-- DADOS BÁSICOS -->
     <div class="section-label" style="margin-top:24px;">Dados da obra</div>
@@ -680,7 +680,10 @@ function handleAudioFile(e) {
 
 function updateAudioPill(label) {
   document.getElementById('audioPills').innerHTML =
-    `<div class="pill audio"><span>${label}</span><button onclick="removeAudio()">✕</button></div>`;
+    `<div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:12px;color:var(--green2);font-weight:600;">🎙 Áudio pronto — ${label}</span>
+      <button onclick="removeAudio()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;">✕ remover</button>
+    </div>`;
 }
 function removeAudio() {
   audioFile=null; audioBlob=null;
@@ -746,11 +749,25 @@ function renderFotoPills() {
   const n = fotosFiles.length;
   const cnt = document.getElementById('fotoCount');
   cnt.textContent = n; cnt.style.display = n>0?'flex':'none';
-  const totalKB = fotosFiles.reduce((s,f)=>s+(f.finalKB||0),0);
-  const info = n>0 ? ` · ~${totalKB < 1024 ? totalKB+'KB' : (totalKB/1024).toFixed(1)+'MB'}` : '';
-  document.getElementById('fotoPills').innerHTML = n>0
-    ? `<div class="pill photo"><span>📷 ${n} foto(s)${info} — comprimidas ✓</span><button onclick="clearFotos()">✕</button></div>` : '';
+  const icon = document.getElementById('galeriaIcon');
+  const hint = document.getElementById('galeriaHint');
+  if(n > 0) {
+    icon.textContent = '✅';
+    hint.textContent = n+' foto(s) selecionada(s) · toque para adicionar mais';
+    document.getElementById('btnGaleria').classList.add('has-file');
+    document.getElementById('fotoPills').innerHTML =
+      `<div style="margin-top:8px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:12px;color:var(--green2);font-weight:600;">📷 ${n} foto(s) prontas para envio</span>
+        <button onclick="clearFotos()" style="background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;">✕ remover</button>
+      </div>`;
+  } else {
+    icon.textContent = '🖼';
+    hint.textContent = 'Escolha múltiplas fotos';
+    document.getElementById('btnGaleria').classList.remove('has-file');
+    document.getElementById('fotoPills').innerHTML = '';
+  }
 }
+function removeFotoIdx(i) { fotosFiles.splice(i,1); renderFotoPills(); }
 function clearFotos() { fotosFiles=[]; renderFotoPills(); }
 
 // ─── PROCESSAMENTO ───────────────────────────────────────────────────────────
@@ -775,7 +792,7 @@ async function iniciar() {
   const pTexto = 20;
   const pFotos = nFotos > 0 ? 45 : 0;
   const pCheck = 10;
-  const total = pAudio + pTexto + (nFotos>0?pFotos:0) + pCheck;
+  const total = Math.max(1, pAudio + pTexto + pFotos + pCheck);
   let acc = 0;
 
   try {
