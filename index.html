@@ -414,7 +414,20 @@ select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' 
   <!-- ══ TELA 2: PROCESSANDO ══ -->
   <div class="screen" id="sc2">
     <div class="screen-title">IA <span>processando…</span></div>
-    <p class="screen-sub">Pode esperar. Você já fez sua parte.</p>
+    <p class="screen-sub">Aguarde — cada etapa aparece abaixo.</p>
+
+    <!-- BARRA GRANDE DE PROGRESSO -->
+    <div style="margin-bottom:24px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:13px;color:var(--muted);font-family:'IBM Plex Mono',monospace;" id="progLabel">Iniciando…</span>
+        <span style="font-size:18px;font-weight:700;font-family:'IBM Plex Mono',monospace;color:var(--green2);" id="progPct">0%</span>
+      </div>
+      <div style="height:10px;background:var(--surface2);border-radius:10px;overflow:hidden;border:1px solid var(--border);">
+        <div id="progBar" style="height:100%;width:0%;background:linear-gradient(90deg,var(--green),var(--green2));border-radius:10px;transition:width .5s ease;"></div>
+      </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;font-family:'IBM Plex Mono',monospace;" id="progDetalhe">Preparando…</div>
+    </div>
+
     <div class="pipeline">
       <div class="pipe-row" id="p1">
         <div class="pipe-circle">🎙</div>
@@ -444,6 +457,12 @@ select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' 
           <div class="pipe-msg" id="m4">Aguardando…</div>
         </div>
       </div>
+    </div>
+
+    <!-- AVISO DE PACIÊNCIA -->
+    <div style="margin-top:20px;background:rgba(45,106,69,.06);border:1px solid rgba(45,106,69,.15);border-radius:10px;padding:14px 16px;">
+      <div style="font-size:13px;color:var(--green);font-weight:600;margin-bottom:4px;">💡 Dica</div>
+      <div style="font-size:12px;color:var(--muted);line-height:1.6;" id="dicaBox">Com muitas fotos o processo pode levar 2–4 minutos. Deixe a tela acesa e aguarde.</div>
     </div>
   </div>
 
@@ -735,6 +754,13 @@ function renderFotoPills() {
 function clearFotos() { fotosFiles=[]; renderFotoPills(); }
 
 // ─── PROCESSAMENTO ───────────────────────────────────────────────────────────
+function setProgresso(pct, label, detalhe) {
+  document.getElementById('progBar').style.width = pct+'%';
+  document.getElementById('progPct').textContent = pct+'%';
+  document.getElementById('progLabel').textContent = label;
+  if(detalhe) document.getElementById('progDetalhe').textContent = detalhe;
+}
+
 async function iniciar() {
   if(!audioFile && fotosFiles.length===0) { alert('Adicione pelo menos o áudio ou as fotos.'); return; }
   document.getElementById('btnProcessar').disabled=true;
@@ -743,37 +769,62 @@ async function iniciar() {
   showScreen(2);
   document.getElementById('bottomBar').style.display='none';
 
+  const nFotos = fotosFiles.length;
+  // peso de cada etapa no progresso total
+  const pAudio = audioFile ? 25 : 0;
+  const pTexto = 20;
+  const pFotos = nFotos > 0 ? 45 : 0;
+  const pCheck = 10;
+  const total = pAudio + pTexto + (nFotos>0?pFotos:0) + pCheck;
+  let acc = 0;
+
   try {
     // 1. Transcrição
+    setProgresso(0, 'Transcrevendo áudio…', 'Enviando gravação para a IA…');
     pipe('p1','running','Transcrevendo áudio…');
     let transcricao = '';
     if(audioFile) {
       transcricao = await transcreverAudio(audioFile);
       ia.transcricao = transcricao;
     }
+    acc += pAudio;
+    setProgresso(Math.round(acc/total*100), 'Áudio transcrito ✓', audioFile ? 'Transcrição concluída' : 'Sem áudio — ignorado');
     pipe('p1','done', audioFile ? 'Concluído ✓' : 'Sem áudio — ignorado');
 
     // 2. Texto
+    setProgresso(Math.round(acc/total*100), 'Organizando relatório…', 'IA estruturando seções técnicas…');
     pipe('p2','running','Organizando seções técnicas…');
     const {textoVisita, pendencias} = await organizarTexto(transcricao);
     ia.textoVisita = textoVisita; ia.pendencias = pendencias;
+    acc += pTexto;
+    setProgresso(Math.round(acc/total*100), 'Relatório organizado ✓', 'Seções técnicas prontas');
     pipe('p2','done','Relatório estruturado ✓');
 
     // 3. Fotos
-    if(fotosFiles.length>0) {
-      pipe('p3','running',`Analisando ${fotosFiles.length} foto(s)…`);
-      ia.legendas = await gerarLegendas(fotosFiles, transcricao);
-      pipe('p3','done',`${fotosFiles.length} legendas geradas ✓`);
+    if(nFotos>0) {
+      setProgresso(Math.round(acc/total*100), 'Analisando fotos…', `0 de ${nFotos} fotos processadas`);
+      pipe('p3','running','Analisando fotos…');
+      // patch gerarLegendas to update progress per batch
+      ia.legendas = await gerarLegendasComProgresso(fotosFiles, transcricao, (feitas) => {
+        const p = Math.round((acc + pFotos*(feitas/nFotos))/total*100);
+        setProgresso(p, 'Analisando fotos…', `${feitas} de ${nFotos} fotos processadas`);
+      });
+      acc += pFotos;
+      setProgresso(Math.round(acc/total*100), 'Fotos analisadas ✓', `${nFotos} legendas geradas`);
+      pipe('p3','done',`${nFotos} legendas geradas ✓`);
     } else {
       pipe('p3','done','Sem fotos — ignorado'); ia.legendas=[];
     }
 
     // 4. Checklist
+    setProgresso(Math.round(acc/total*100), 'Preenchendo checklist…', 'Identificando itens executados…');
     pipe('p4','running','Preenchendo checklist…');
     ia.checklist = await preencherChecklist(transcricao);
+    acc += pCheck;
+    setProgresso(100, 'Concluído! ✓', 'Tudo pronto — abrindo revisão…');
     pipe('p4','done','Checklist preenchido ✓');
 
-    await delay(600);
+    await delay(800);
     preencherRevisao();
     showScreen(3);
 
@@ -927,7 +978,41 @@ async function gerarLegendas(fotos, transcricao) {
   return legendas;
 }
 
-async function preencherChecklist(t) {
+async function gerarLegendasComProgresso(fotos, transcricao, onProgress) {
+  const legendas = new Array(fotos.length).fill('');
+  const LOTE = 3;
+  let feitas = 0;
+
+  for(let i=0; i<fotos.length; i+=LOTE) {
+    const lote = fotos.slice(i, i+LOTE);
+    pipe('p3','running','Foto '+(i+1)+'–'+Math.min(i+LOTE, fotos.length)+' de '+fotos.length+'…');
+
+    await Promise.all(lote.map(async (foto, j) => {
+      const idx = i+j;
+      const b64 = foto.dataUrl.split(',')[1];
+      const mt = foto.file.type||'image/jpeg';
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            model:'claude-sonnet-4-20250514', max_tokens:120,
+            messages:[{role:'user',content:[
+              {type:'image',source:{type:'base64',media_type:mt,data:b64}},
+              {type:'text',text:'Foto '+(idx+1)+' de visita a obra de impermeabilização. '+(transcricao?'Contexto: '+transcricao.substring(0,400):'')+'\nEscreva legenda técnica curta (max 100 chars). Apenas a legenda.'}
+            ]}]
+          })
+        });
+        const d = await res.json();
+        legendas[idx] = d.content?.[0]?.text?.trim()||'Fotografia '+(idx+1);
+      } catch { legendas[idx] = 'Fotografia '+(idx+1); }
+      feitas++;
+      if(onProgress) onProgress(feitas);
+    }));
+
+    if(i+LOTE < fotos.length) await delay(300);
+  }
+  return legendas;
+}
   if(!t) return {};
   const items = CKI.map((it,i)=>`${i}:${it}`).join('\n');
   const raw = await claude([{role:'user',content:`Checklist de visita a obra. Para cada item responda S, N ou NA.\n${items}\nTranscrição: ${t.substring(0,1000)}\nResponda SOMENTE JSON: {"0":"S","1":"N",...}`}], 300);
