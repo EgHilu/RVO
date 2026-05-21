@@ -673,8 +673,8 @@ function removeAudio() {
 }
 
 // ─── FOTOS ───────────────────────────────────────────────────────────────────
-const MAX_FOTO_PX = 1280;   // largura/altura máxima
-const MAX_FOTO_KB = 800;    // tamanho alvo em KB
+const MAX_FOTO_PX = 800;    // largura/altura máxima
+const MAX_FOTO_KB = 300;    // tamanho alvo em KB
 
 function comprimirFoto(file) {
   return new Promise(resolve => {
@@ -890,24 +890,39 @@ Responda SOMENTE JSON válido: {"textoVisita":"...","pendencias":"pend1\\npend2"
 }
 
 async function gerarLegendas(fotos, transcricao) {
-  const legendas = [];
-  for(let i=0;i<fotos.length;i++) {
-    const b64 = fotos[i].dataUrl.split(',')[1];
-    const mt = fotos[i].file.type||'image/jpeg';
-    try {
-      const res = await fetch('https://api.anthropic.com/v1/messages', {
-        method:'POST', headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-          model:'claude-sonnet-4-20250514', max_tokens:120,
-          messages:[{role:'user',content:[
-            {type:'image',source:{type:'base64',media_type:mt,data:b64}},
-            {type:'text',text:`Foto ${i+1} de visita a obra de impermeabilização. ${transcricao?'Contexto: '+transcricao.substring(0,500):''}\nEscreva legenda técnica curta (máx 100 chars). Apenas a legenda.`}
-          ]}]
-        })
-      });
-      const d = await res.json();
-      legendas.push(d.content?.[0]?.text?.trim()||`Fotografia ${i+1}`);
-    } catch { legendas.push(`Fotografia ${i+1}`); }
+  const legendas = new Array(fotos.length).fill('');
+  const LOTE = 3; // processa 3 fotos por vez
+
+  for(let i=0; i<fotos.length; i+=LOTE) {
+    const lote = fotos.slice(i, i+LOTE);
+    const indices = lote.map((_,j) => i+j);
+
+    // atualiza status
+    pipe('p3','running',`Foto ${i+1}–${Math.min(i+LOTE, fotos.length)} de ${fotos.length}…`);
+
+    // processa lote em paralelo
+    await Promise.all(lote.map(async (foto, j) => {
+      const idx = i+j;
+      const b64 = foto.dataUrl.split(',')[1];
+      const mt = foto.file.type||'image/jpeg';
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            model:'claude-sonnet-4-20250514', max_tokens:120,
+            messages:[{role:'user',content:[
+              {type:'image',source:{type:'base64',media_type:mt,data:b64}},
+              {type:'text',text:'Foto '+(idx+1)+' de visita a obra de impermeabilização. '+(transcricao?'Contexto: '+transcricao.substring(0,400):''+'')+'\nEscreva legenda técnica curta (max 100 chars). Apenas a legenda.'}
+            ]}]
+          })
+        });
+        const d = await res.json();
+        legendas[idx] = d.content?.[0]?.text?.trim()||`Fotografia ${idx+1}`;
+      } catch { legendas[idx] = `Fotografia ${idx+1}`; }
+    }));
+
+    // pausa entre lotes para não sobrecarregar
+    if(i+LOTE < fotos.length) await delay(300);
   }
   return legendas;
 }
