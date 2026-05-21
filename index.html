@@ -342,7 +342,7 @@ select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' 
 
 <div class="topbar">
   <div class="topbar-brand">AGENTE <span>//</span> RVO</div>
-  <div class="topbar-step" id="topStep">Passo 1 de 4</div>
+  <div id="topStep" style="display:flex;gap:8px;align-items:center;font-size:12px;"></div>
 </div>
 <div class="progress-track"><div class="progress-fill" id="progFill"></div></div>
 
@@ -405,7 +405,7 @@ select { background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' 
 
     <!-- DADOS BÁSICOS -->
     <div class="section-label" style="margin-top:24px;">Dados da obra</div>
-    <div class="field"><label>Nome da Obra</label><input type="text" id="nomeObra" placeholder="Ex: Edifício Jardã by Palme"></div>
+    <div class="field"><label>Nome da Obra</label><input type="text" id="nomeObra" placeholder="Ex: Edifício Jardã by Palme" oninput="atualizarStatus()"></div>
     <div class="field"><label>Data</label><input type="date" id="dataVisita"></div>
     <div class="field"><label>Construtora</label><input type="text" id="construtora" placeholder="Nome da construtora"></div>
     <div class="field"><label>Nº do Relatório</label><input type="text" id="numRvo" placeholder="Ex: RVO_06"></div>
@@ -601,16 +601,39 @@ const CKI = [
 ];
 
 document.getElementById('dataVisita').value = new Date().toISOString().split('T')[0];
+atualizarStatus();
 
 // ─── NAVEGAÇÃO ──────────────────────────────────────────────────────────────
+function atualizarStatus() {
+  const el = document.getElementById('topStep');
+  // só mostra na tela 1
+  if(!document.getElementById('sc1').classList.contains('active')) { el.innerHTML=''; return; }
+  const temAudio = !!(audioFile);
+  const nFotos = fotosFiles.length;
+  const temObra = !!(document.getElementById('nomeObra').value.trim());
+  const badge = (ok, txt) =>
+    `<span style="font-size:11px;padding:3px 7px;border-radius:10px;font-family:'IBM Plex Mono',monospace;letter-spacing:.5px;
+      background:${ok?'rgba(200,240,74,.2)':'rgba(255,255,255,.1)'};
+      color:${ok?'#c8f04a':'rgba(255,255,255,.4)'};">${txt}</span>`;
+  el.innerHTML =
+    badge(temAudio, temAudio?'🎙 áudio':'🎙') +
+    badge(nFotos>0, nFotos>0?'📷 '+nFotos:'📷') +
+    badge(temObra, temObra?'✓ obra':'obra');
+}
+
 function showScreen(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.getElementById('sc'+id).classList.add('active');
   document.getElementById('scrollArea').scrollTop = 0;
-  const labels = ['','Passo 1 de 4','Processando…','Passo 3 de 4','Concluído'];
-  const fills = ['','25%','55%','80%','100%'];
-  document.getElementById('topStep').textContent = labels[id];
-  document.getElementById('progFill').style.width = fills[id];
+  const fills = ['','0%','50%','85%','100%'];
+  const labels = ['','Processando…','Revisão','Concluído'];
+  document.getElementById('progFill').style.width = fills[id]||'0%';
+  // topbar
+  const ts = document.getElementById('topStep');
+  if(id===1) atualizarStatus();
+  else if(id===2) ts.innerHTML = `<span style="font-size:12px;color:rgba(255,255,255,.7);font-family:'IBM Plex Mono',monospace;">Processando…</span>`;
+  else if(id===3) ts.innerHTML = `<span style="font-size:12px;color:rgba(255,255,255,.7);font-family:'IBM Plex Mono',monospace;">Revisão</span>`;
+  else if(id===4) ts.innerHTML = `<span style="font-size:12px;color:#c8f04a;font-family:'IBM Plex Mono',monospace;">✓ Concluído</span>`;
   // nav
   document.getElementById('nav1').style.display = id===1 ? 'block':'none';
   document.getElementById('nav3').style.display = id===3 ? 'flex':'none';
@@ -665,6 +688,7 @@ function pararGravacao() {
   document.getElementById('recTimer').style.display='none';
   document.getElementById('recIndicator').classList.remove('active');
   document.getElementById('btnGravar').classList.add('has-file');
+  atualizarStatus();
 }
 
 function formatSecs(s) {
@@ -675,7 +699,8 @@ function formatSecs(s) {
 function handleAudioFile(e) {
   const f = e.target.files[0]; if(!f) return;
   audioFile = f; audioBlob = null;
-  updateAudioPill('🎙 ' + f.name);
+  updateAudioPill(f.name);
+  atualizarStatus();
 }
 
 function updateAudioPill(label) {
@@ -692,6 +717,7 @@ function removeAudio() {
   document.getElementById('gravarLabel').textContent='Gravar áudio agora';
   document.getElementById('gravarHint').textContent='Toque para iniciar gravação';
   document.getElementById('btnGravar').classList.remove('has-file');
+  atualizarStatus();
 }
 
 // ─── FOTOS ───────────────────────────────────────────────────────────────────
@@ -742,6 +768,7 @@ function handleFotos(e) {
       fotosFiles.push(result);
       processed++;
       renderFotoPills();
+      atualizarStatus();
     });
   });
 }
@@ -768,7 +795,7 @@ function renderFotoPills() {
   }
 }
 function removeFotoIdx(i) { fotosFiles.splice(i,1); renderFotoPills(); }
-function clearFotos() { fotosFiles=[]; renderFotoPills(); }
+function clearFotos() { fotosFiles=[]; renderFotoPills(); atualizarStatus(); }
 
 // ─── PROCESSAMENTO ───────────────────────────────────────────────────────────
 function setProgresso(pct, label, detalhe) {
