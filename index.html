@@ -12,45 +12,60 @@
 body{font-family:system-ui,sans-serif;background:#F5F2ED;color:#1A1814;font-size:15px}
 header{background:#1A3A2A;color:#fff;padding:16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:99}
 .brand{font-size:14px;letter-spacing:2px;font-weight:700}
-#statusBar{font-size:12px;display:flex;gap:6px}
-.badge{padding:3px 8px;border-radius:12px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.4);font-size:11px;transition:all .3s}
+#statusBar{display:flex;gap:5px}
+.badge{padding:3px 7px;border-radius:12px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.35);font-size:11px;transition:all .3s}
 .badge.ok{background:rgba(200,240,74,.2);color:#c8f04a}
-.prog{height:4px;background:#D4CFC6}
+.prog{height:3px;background:#D4CFC6}
 .prog-fill{height:100%;background:#2D6A45;width:0%;transition:width .4s}
-.main{padding:16px 16px 100px}
-.screen{display:none}
-.screen.on{display:block}
-h2{font-size:22px;font-weight:700;margin-bottom:4px}
+.main{padding:16px 16px 100px;max-width:600px;margin:0 auto}
+.screen{display:none}.screen.on{display:block}
+h2{font-size:21px;font-weight:700;margin-bottom:4px}
 h2 em{color:#2D6A45;font-style:normal}
 .sub{color:#8A857C;font-size:13px;margin-bottom:20px}
-.sec-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A857C;margin:20px 0 8px;border-bottom:1px solid #D4CFC6;padding-bottom:4px}
-.card{background:#fff;border:1.5px solid #D4CFC6;border-radius:12px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:all .18s;position:relative;overflow:hidden}
+.sec{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#8A857C;margin:20px 0 8px;display:flex;align-items:center;gap:8px}
+.sec::after{content:'';flex:1;height:1px;background:#D4CFC6}
+.card{background:#fff;border:1.5px solid #D4CFC6;border-radius:12px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:14px;cursor:pointer;transition:border-color .18s;position:relative;overflow:hidden}
 .card:active{transform:scale(.98)}
-.card.ok{border-color:#2D6A45;background:rgba(45,106,69,.04)}
+.card.ok{border-color:#2D6A45}
 .card input[type=file]{position:absolute;inset:0;opacity:0;width:100%;height:100%;cursor:pointer}
-.card-icon{width:48px;height:48px;border-radius:10px;background:#EDEAE4;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
-.card.ok .card-icon{background:rgba(45,106,69,.12)}
-.card-text{flex:1}
-.card-title{font-weight:600;font-size:15px}
-.card-hint{font-size:12px;color:#8A857C;margin-top:2px}
-.card-arrow{color:#8A857C;font-size:20px}
-.conf{font-size:12px;color:#2D6A45;font-weight:600;margin-top:8px;padding:6px 10px;background:rgba(45,106,69,.06);border-radius:8px;display:none}
-.conf.on{display:flex;justify-content:space-between;align-items:center}
+.ci{width:46px;height:46px;border-radius:10px;background:#EDEAE4;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ct{flex:1}.ct-title{font-weight:600;font-size:15px}.ct-hint{font-size:12px;color:#8A857C;margin-top:2px}
+.conf{font-size:12px;color:#2D6A45;font-weight:600;margin-top:8px;padding:8px 10px;background:rgba(45,106,69,.06);border-radius:8px;display:none;justify-content:space-between;align-items:center}
+.conf.on{display:flex}
 .conf button{background:none;border:none;color:#8A857C;font-size:12px;cursor:pointer}
-.field{margin-bottom:12px}
-.field label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8A857C;margin-bottom:5px}
-.field input,.field select{width:100%;background:#fff;border:1.5px solid #D4CFC6;border-radius:10px;padding:12px 14px;font-size:15px;font-family:inherit;outline:none}
-.field input:focus,.field select:focus{border-color:#2D6A45}
-.bottom{position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:#F5F2ED;border-top:1px solid #D4CFC6}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;letter-spacing:1px;text-transform:uppercase;color:#8A857C;margin-bottom:4px}
+.field input,.field select,.field textarea{width:100%;background:#fff;border:1.5px solid #D4CFC6;border-radius:10px;padding:11px 13px;font-size:15px;font-family:inherit;outline:none;transition:border-color .18s}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#2D6A45}
+.field textarea{resize:vertical;min-height:90px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.nota-area{background:#fff;border:1px solid #D4CFC6;border-radius:10px;overflow:hidden;margin-bottom:10px}
+.nota-head{background:#1F4E79;color:#fff;padding:8px 12px;font-size:12px;font-weight:600;display:grid;grid-template-columns:1fr 60px 60px 60px 60px 60px;gap:4px;text-align:center}
+.nota-head span:first-child{text-align:left}
+.nota-row{display:grid;grid-template-columns:1fr 60px 60px 60px 60px 60px;gap:4px;padding:6px 12px;border-bottom:1px solid #EDEAE4;align-items:center}
+.nota-row:last-child{border-bottom:none}
+.nota-row input[type=text]{border:1px solid #D4CFC6;border-radius:6px;padding:5px 8px;font-size:13px;background:#F5F2ED}
+.nota-btn{width:100%;padding:5px 0;border:1px solid #D4CFC6;background:transparent;border-radius:6px;cursor:pointer;font-size:12px;color:#8A857C;transition:all .15s}
+.nota-btn:active{transform:scale(.95)}
+.nota-btn.s5{background:#2D6A45;border-color:#2D6A45;color:#fff;font-weight:700}
+.nota-btn.s3{background:#F0C84A;border-color:#F0C84A;color:#000;font-weight:700}
+.nota-btn.s1{background:#C0392B;border-color:#C0392B;color:#fff;font-weight:700}
+.nota-btn.sn{background:#888;border-color:#888;color:#fff;font-weight:700}
+.add-btn{width:100%;padding:10px;border:1.5px dashed #D4CFC6;background:none;border-radius:10px;color:#8A857C;font-size:13px;cursor:pointer;margin-top:4px;font-family:inherit}
+.add-btn:hover{border-color:#2D6A45;color:#2D6A45}
+.bottom{position:fixed;bottom:0;left:0;right:0;padding:12px 16px;background:#F5F2ED;border-top:1px solid #D4CFC6;max-width:600px;margin:0 auto;left:50%;transform:translateX(-50%);width:100%}
 .btn{width:100%;padding:16px;border-radius:12px;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all .18s}
-.btn:active{transform:scale(.97)}
-.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
-.btn-green{background:#1A3A2A;color:#fff}
-.btn-orange{background:#C8883A;color:#fff}
+.btn:active{transform:scale(.97)}.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.btn-green{background:#1A3A2A;color:#fff}.btn-orange{background:#C8883A;color:#fff}
 .btn-ghost{background:none;border:1.5px solid #D4CFC6;color:#1A1814;margin-top:8px}
 .spin{width:18px;height:18px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:rot .6s linear infinite;display:none}
 @keyframes rot{to{transform:rotate(360deg)}}
-/* PIPELINE */
+.prog-box{background:#fff;border:1px solid #D4CFC6;border-radius:12px;padding:16px;margin-bottom:12px}
+.prog-row{display:flex;justify-content:space-between;margin-bottom:8px}
+.prog-label{font-size:13px;color:#8A857C}.prog-pct{font-size:20px;font-weight:700;color:#2D6A45}
+.prog-bar{height:10px;background:#EDEAE4;border-radius:10px;overflow:hidden}
+.prog-bar-fill{height:100%;background:linear-gradient(90deg,#1A3A2A,#2D6A45);border-radius:10px;width:0%;transition:width .5s ease}
+.prog-detail{font-size:11px;color:#8A857C;margin-top:6px}
 .pipeline{background:#fff;border:1px solid #D4CFC6;border-radius:12px;overflow:hidden;margin:16px 0}
 .pipe{display:flex;align-items:center;gap:14px;padding:16px;border-bottom:1px solid #D4CFC6}
 .pipe:last-child{border-bottom:none}
@@ -58,24 +73,12 @@ h2 em{color:#2D6A45;font-style:normal}
 .pipe.run .pipe-dot{border-color:#2D6A45;background:rgba(45,106,69,.1);animation:pulse 1s ease-in-out infinite}
 .pipe.done .pipe-dot{background:#1A3A2A;border-color:#1A3A2A;color:#fff;font-size:14px}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-.pipe-info{flex:1}
-.pipe-name{font-weight:600;font-size:14px}
-.pipe-msg{font-size:12px;color:#8A857C;margin-top:2px}
+.pipe-info{flex:1}.pipe-name{font-weight:600;font-size:14px}.pipe-msg{font-size:12px;color:#8A857C;margin-top:2px}
 .pipe.run .pipe-msg{color:#2D6A45}
-/* BIG PROGRESS */
-.prog-box{background:#fff;border:1px solid #D4CFC6;border-radius:12px;padding:16px;margin-bottom:12px}
-.prog-row{display:flex;justify-content:space-between;margin-bottom:8px}
-.prog-label{font-size:13px;color:#8A857C}
-.prog-pct{font-size:20px;font-weight:700;color:#2D6A45}
-.prog-bar{height:10px;background:#EDEAE4;border-radius:10px;overflow:hidden}
-.prog-bar-fill{height:100%;background:linear-gradient(90deg,#1A3A2A,#2D6A45);border-radius:10px;width:0%;transition:width .5s ease}
-.prog-detail{font-size:11px;color:#8A857C;margin-top:6px}
 .tip{background:rgba(45,106,69,.06);border:1px solid rgba(45,106,69,.15);border-radius:10px;padding:12px;font-size:13px;color:#1A3A2A;margin-top:12px}
-/* REVIEW */
 .rev-card{background:#fff;border:1px solid #D4CFC6;border-radius:12px;margin-bottom:12px;overflow:hidden}
 .rev-head{padding:12px 16px;border-bottom:1px solid #D4CFC6;display:flex;justify-content:space-between;align-items:center}
-.rev-title{font-weight:600;font-size:14px}
-.rev-tag{font-size:10px;background:#EDEAE4;padding:3px 8px;border-radius:4px;color:#8A857C}
+.rev-title{font-weight:600;font-size:14px}.rev-tag{font-size:10px;background:#EDEAE4;padding:3px 8px;border-radius:4px;color:#8A857C}
 .rev-body{padding:14px 16px}
 .editable{font-size:13px;line-height:1.7;background:#F5F2ED;border-radius:8px;padding:12px;min-height:80px;outline:none;white-space:pre-wrap;border:1.5px solid transparent}
 .editable:focus{border-color:#2D6A45;background:#fff}
@@ -83,10 +86,12 @@ h2 em{color:#2D6A45;font-style:normal}
 .ck-row:last-child{border-bottom:none}
 .ck-label{flex:1;font-size:13px;line-height:1.4}
 .ck-sel{width:72px;padding:6px;font-size:12px;background:#F5F2ED;border:1px solid #D4CFC6;border-radius:8px;font-family:inherit;text-align:center}
-/* SUCCESS */
 .success-icon{font-size:60px;text-align:center;margin:32px 0 12px}
 .success-title{font-size:24px;font-weight:700;text-align:center;margin-bottom:8px}
 .success-sub{color:#8A857C;font-size:14px;text-align:center;margin-bottom:24px;line-height:1.6}
+.sim-nao{display:flex;gap:8px}
+.sim-nao button{flex:1;padding:10px;border:1.5px solid #D4CFC6;border-radius:8px;background:#fff;font-size:14px;cursor:pointer;font-family:inherit;transition:all .15s}
+.sim-nao button.ativo{border-color:#2D6A45;background:rgba(45,106,69,.08);color:#1A3A2A;font-weight:600}
 </style>
 </head>
 <body>
@@ -103,656 +108,669 @@ h2 em{color:#2D6A45;font-style:normal}
 
 <div class="main">
 
-  <!-- TELA 1: COLETA -->
-  <div class="screen on" id="t1">
-    <h2>Coleta da <em>visita</em></h2>
-    <p class="sub">Suba o áudio e as fotos da obra.</p>
+<!-- ══ TELA 1: COLETA ══ -->
+<div class="screen on" id="t1">
+  <h2>Coleta da <em>visita</em></h2>
+  <p class="sub">Preencha os dados, suba o áudio e as fotos.</p>
 
-    <div class="sec-label">Áudio</div>
-
-    <div class="card" id="cardGravar" onclick="toggleGravar()">
-      <div class="card-icon" id="iconGravar">🎙</div>
-      <div class="card-text">
-        <div class="card-title" id="lblGravar">Gravar áudio agora</div>
-        <div class="card-hint" id="hintGravar">Toque para iniciar gravação</div>
-        <div id="recTimer" style="font-size:20px;font-weight:700;color:#C0392B;display:none;margin-top:4px">00:00</div>
-      </div>
-      <div id="recBadge" style="display:none;color:#C0392B;font-weight:700;font-size:13px">● REC</div>
+  <div class="sec">Áudio da visita</div>
+  <div class="card" id="cardGravar" onclick="toggleGravar()">
+    <div class="ci" id="iconGravar">🎙</div>
+    <div class="ct">
+      <div class="ct-title" id="lblGravar">Gravar áudio agora</div>
+      <div class="ct-hint" id="hintGravar">Toque para iniciar gravação</div>
+      <div id="recTimer" style="font-size:20px;font-weight:700;color:#C0392B;display:none;margin-top:4px">00:00</div>
     </div>
-
-    <div style="text-align:center;color:#8A857C;font-size:12px;margin:8px 0">ou suba um arquivo</div>
-
-    <div class="card">
-      <input type="file" accept="audio/*,video/*,.m4a,.amr,.3gp,.aac" onchange="setAudio(event)">
-      <div class="card-icon">📂</div>
-      <div class="card-text">
-        <div class="card-title">Selecionar áudio</div>
-        <div class="card-hint">M4A, AMR, MP3, WAV — Samsung</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="conf" id="confAudio">
-      <span id="confAudioTxt"></span>
-      <button onclick="remAudio()">✕ remover</button>
-    </div>
-
-    <div class="sec-label">Fotos</div>
-
-    <div class="card">
-      <input type="file" accept="image/*" capture="environment" multiple onchange="addFotos(event)">
-      <div class="card-icon">📷</div>
-      <div class="card-text">
-        <div class="card-title">Tirar foto agora</div>
-        <div class="card-hint">Abre a câmera do celular</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-
-    <div class="card" id="cardGaleria">
-      <input type="file" accept="image/*" multiple onchange="addFotos(event)">
-      <div class="card-icon" id="iconGaleria">🖼</div>
-      <div class="card-text">
-        <div class="card-title">Selecionar da galeria</div>
-        <div class="card-hint" id="hintGaleria">Escolha múltiplas fotos</div>
-      </div>
-      <div class="card-arrow">›</div>
-    </div>
-    <div class="conf" id="confFotos">
-      <span id="confFotosTxt"></span>
-      <button onclick="remFotos()">✕ remover</button>
-    </div>
-
-    <div class="sec-label">Dados da obra</div>
-    <div class="field"><label>Nome da Obra</label><input id="nomeObra" placeholder="Ex: Edifício Jardã by Palme" oninput="atualizarBadges()"></div>
-    <div class="field"><label>Data</label><input type="date" id="dataVisita"></div>
-    <div class="field"><label>Construtora</label><input id="construtora" placeholder="Nome da construtora"></div>
-    <div class="field"><label>Nº do Relatório</label><input id="numRvo" placeholder="Ex: RVO_06"></div>
-    <div class="field"><label>Endereço</label><input id="endereco" placeholder="Rua, bairro, cidade-UF"></div>
-    <div class="field"><label>Executor da Aplicação</label><input id="executor" placeholder="Empresa aplicadora"></div>
+    <div id="recBadge" style="display:none;color:#C0392B;font-weight:700;font-size:13px">● REC</div>
   </div>
-
-  <!-- TELA 2: PROCESSANDO -->
-  <div class="screen" id="t2">
-    <h2>IA <em>processando…</em></h2>
-    <p class="sub">Aguarde — cada etapa atualiza abaixo.</p>
-
-    <div class="prog-box">
-      <div class="prog-row">
-        <span class="prog-label" id="pLabel">Iniciando…</span>
-        <span class="prog-pct" id="pPct">0%</span>
-      </div>
-      <div class="prog-bar"><div class="prog-bar-fill" id="pBar"></div></div>
-      <div class="prog-detail" id="pDetail">Preparando…</div>
-    </div>
-
-    <div class="pipeline">
-      <div class="pipe" id="p1">
-        <div class="pipe-dot">🎙</div>
-        <div class="pipe-info">
-          <div class="pipe-name">Transcrição do áudio</div>
-          <div class="pipe-msg" id="m1">Aguardando…</div>
-        </div>
-      </div>
-      <div class="pipe" id="p2">
-        <div class="pipe-dot">📝</div>
-        <div class="pipe-info">
-          <div class="pipe-name">Organização do relatório</div>
-          <div class="pipe-msg" id="m2">Aguardando…</div>
-        </div>
-      </div>
-      <div class="pipe" id="p3">
-        <div class="pipe-dot">📷</div>
-        <div class="pipe-info">
-          <div class="pipe-name">Legendas das fotos</div>
-          <div class="pipe-msg" id="m3">Aguardando…</div>
-        </div>
-      </div>
-      <div class="pipe" id="p4">
-        <div class="pipe-dot">⚙️</div>
-        <div class="pipe-info">
-          <div class="pipe-name">Checklist automático</div>
-          <div class="pipe-msg" id="m4">Aguardando…</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="tip">💡 Com muitas fotos o processo pode levar 2–4 minutos. Deixe a tela acesa.</div>
+  <div style="text-align:center;color:#8A857C;font-size:12px;margin:6px 0">ou suba um arquivo</div>
+  <div class="card">
+    <input type="file" accept="audio/*,video/*,.m4a,.amr,.3gp,.aac" onchange="setAudio(event)">
+    <div class="ci">📂</div>
+    <div class="ct"><div class="ct-title">Selecionar áudio</div><div class="ct-hint">M4A, AMR, MP3 — qualquer formato Samsung</div></div>
+    <div style="color:#8A857C;font-size:20px">›</div>
   </div>
+  <div class="conf" id="confAudio"><span id="confAudioTxt"></span><button onclick="remAudio()">✕ remover</button></div>
 
-  <!-- TELA 3: REVISÃO -->
-  <div class="screen" id="t3">
-    <h2>Revise e <em>ajuste</em></h2>
-    <p class="sub">Toque em qualquer campo para editar antes de baixar.</p>
+  <div class="sec">Fotos da obra</div>
+  <div class="card">
+    <input type="file" accept="image/*" capture="environment" multiple onchange="addFotos(event)">
+    <div class="ci">📷</div>
+    <div class="ct"><div class="ct-title">Tirar foto agora</div><div class="ct-hint">Abre a câmera do celular</div></div>
+    <div style="color:#8A857C;font-size:20px">›</div>
+  </div>
+  <div class="card" id="cardGaleria">
+    <input type="file" accept="image/*" multiple onchange="addFotos(event)">
+    <div class="ci" id="iconGaleria">🖼</div>
+    <div class="ct"><div class="ct-title">Selecionar da galeria</div><div class="ct-hint" id="hintGaleria">Escolha múltiplas fotos</div></div>
+    <div style="color:#8A857C;font-size:20px">›</div>
+  </div>
+  <div class="conf" id="confFotos"><span id="confFotosTxt"></span><button onclick="remFotos()">✕ remover</button></div>
 
-    <div class="rev-card">
-      <div class="rev-head"><span class="rev-title">📝 Texto da visita</span><span class="rev-tag">editável</span></div>
-      <div class="rev-body"><div class="editable" id="rTexto" contenteditable="true"></div></div>
+  <div class="sec">Dados da obra</div>
+  <div class="field"><label>Nome da Obra *</label><input id="nomeObra" placeholder="Ex: Edifício Jardã by Palme" oninput="atualizarBadges()"></div>
+  <div class="grid2">
+    <div class="field"><label>Data da Visita</label><input type="date" id="dataVisita"></div>
+    <div class="field"><label>Nº do Relatório</label><input id="numRvo" placeholder="RVO_06"></div>
+  </div>
+  <div class="field"><label>Endereço</label><input id="endereco" placeholder="Rua, número, bairro"></div>
+  <div class="grid2">
+    <div class="field"><label>CEP</label><input id="cep" placeholder="00.000-000"></div>
+    <div class="field"><label>Cidade/UF</label><input id="cidade" placeholder="Curitiba/PR"></div>
+  </div>
+  <div class="field"><label>Construtora</label><input id="construtora" placeholder="Nome da construtora"></div>
+  <div class="grid2">
+    <div class="field"><label>Área Construída (m²)</label><input id="areaConstruida" placeholder="0,00"></div>
+    <div class="field"><label>Área Impermeabilizada (m²)</label><input id="areaImpermeabilizada" placeholder="0,00"></div>
+  </div>
+  <div class="field"><label>Executor da Aplicação</label><input id="executor" placeholder="Empresa aplicadora"></div>
+
+  <div class="sec">Projeto de impermeabilização</div>
+  <div class="field">
+    <label>Possui projeto específico?</label>
+    <div class="sim-nao" id="possuiProjeto">
+      <button onclick="setSN('possuiProjeto',this,'SIM')">SIM</button>
+      <button onclick="setSN('possuiProjeto',this,'NÃO')">NÃO</button>
     </div>
-
-    <div class="rev-card">
-      <div class="rev-head"><span class="rev-title">⚠️ Pendências</span><span class="rev-tag">editável</span></div>
-      <div class="rev-body"><div class="editable" id="rPend" contenteditable="true" style="min-height:60px"></div></div>
+  </div>
+  <div class="field"><label>Empresa / Revisão do Projeto</label><input id="empresaProjeto" placeholder="Nome da empresa e revisão"></div>
+  <div class="field">
+    <label>Possui especificação técnica?</label>
+    <div class="sim-nao" id="possuiEspec">
+      <button onclick="setSN('possuiEspec',this,'-')">NÃO</button>
+      <button onclick="setSN('possuiEspec',this,'FAB')">Fabricante</button>
+      <button onclick="setSN('possuiEspec',this,'PROJ')">Projetista</button>
     </div>
-
-    <div class="rev-card">
-      <div class="rev-head"><span class="rev-title">✅ Checklist</span></div>
-      <div class="rev-body" id="rCk"></div>
+  </div>
+  <div class="field">
+    <label>Adotado parcial ou total?</label>
+    <div class="sim-nao" id="adotadoEspec">
+      <button onclick="setSN('adotadoEspec',this,'PARCIAL')">PARCIAL</button>
+      <button onclick="setSN('adotadoEspec',this,'TOTAL')">TOTAL</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>Acompanhamento de especialista?</label>
+    <div class="sim-nao" id="especialista">
+      <button onclick="setSN('especialista',this,'SIM')">SIM</button>
+      <button onclick="setSN('especialista',this,'NÃO')">NÃO</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>Empresa com experiência técnica?</label>
+    <div class="sim-nao" id="experiencia">
+      <button onclick="setSN('experiencia',this,'SIM')">SIM</button>
+      <button onclick="setSN('experiencia',this,'NÃO')">NÃO</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>Materiais na obra?</label>
+    <div class="sim-nao" id="materiais">
+      <button onclick="setSN('materiais',this,'SIM')">SIM</button>
+      <button onclick="setSN('materiais',this,'NÃO')">NÃO</button>
+    </div>
+  </div>
+  <div class="field">
+    <label>Depositados corretamente?</label>
+    <div class="sim-nao" id="depositados">
+      <button onclick="setSN('depositados',this,'SIM')">SIM</button>
+      <button onclick="setSN('depositados',this,'NÃO')">NÃO</button>
     </div>
   </div>
 
-  <!-- TELA 4: SUCESSO -->
-  <div class="screen" id="t4">
-    <div class="success-icon">🎉</div>
-    <div class="success-title">Relatório gerado!</div>
-    <p class="success-sub">O arquivo .docx foi baixado.<br>Abra no Word ou Google Docs.</p>
-    <div class="rev-card"><div class="rev-body" id="rResumo" style="font-size:13px;color:#8A857C;line-height:1.8"></div></div>
+  <div class="sec">Avaliação por local (1/3/5/-)</div>
+  <div class="nota-area">
+    <div class="nota-head">
+      <span>Local</span><span>Proj.</span><span>Regul.</span><span>Imp.</span><span>Teste</span><span>Prot.</span>
+    </div>
+    <div id="locaisBody"></div>
   </div>
+  <button class="add-btn" onclick="addLocal()">+ Adicionar local</button>
+</div>
 
-</div><!-- /main -->
+<!-- ══ TELA 2: PROCESSANDO ══ -->
+<div class="screen" id="t2">
+  <h2>IA <em>processando…</em></h2>
+  <p class="sub">Aguarde — cada etapa atualiza abaixo.</p>
+  <div class="prog-box">
+    <div class="prog-row">
+      <span class="prog-label" id="pLabel">Iniciando…</span>
+      <span class="prog-pct" id="pPct">0%</span>
+    </div>
+    <div class="prog-bar"><div class="prog-bar-fill" id="pBar"></div></div>
+    <div class="prog-detail" id="pDetail">Preparando…</div>
+  </div>
+  <div class="pipeline">
+    <div class="pipe" id="p1"><div class="pipe-dot">🎙</div><div class="pipe-info"><div class="pipe-name">Transcrição do áudio</div><div class="pipe-msg" id="m1">Aguardando…</div></div></div>
+    <div class="pipe" id="p2"><div class="pipe-dot">📝</div><div class="pipe-info"><div class="pipe-name">Organização do relatório</div><div class="pipe-msg" id="m2">Aguardando…</div></div></div>
+    <div class="pipe" id="p3"><div class="pipe-dot">📷</div><div class="pipe-info"><div class="pipe-name">Legendas das fotos</div><div class="pipe-msg" id="m3">Aguardando…</div></div></div>
+    <div class="pipe" id="p4"><div class="pipe-dot">⚙️</div><div class="pipe-info"><div class="pipe-name">Checklist automático</div><div class="pipe-msg" id="m4">Aguardando…</div></div></div>
+  </div>
+  <div class="tip">💡 Com muitas fotos o processo pode levar 2–4 minutos. Deixe a tela acesa.</div>
+</div>
 
-<!-- BOTTOM NAV -->
-<div class="bottom" id="bottomNav">
-  <div id="nav1">
-    <button class="btn btn-green" id="btnProcessar" onclick="processar()">
-      <div class="spin" id="spinP"></div>
-      <span id="txtP">Processar com IA →</span>
-    </button>
+<!-- ══ TELA 3: REVISÃO ══ -->
+<div class="screen" id="t3">
+  <h2>Revise e <em>ajuste</em></h2>
+  <p class="sub">Toque em qualquer campo para editar antes de baixar.</p>
+  <div class="rev-card">
+    <div class="rev-head"><span class="rev-title">📝 Texto da visita</span><span class="rev-tag">editável</span></div>
+    <div class="rev-body"><div class="editable" id="rTexto" contenteditable="true"></div></div>
   </div>
-  <div id="nav3" style="display:none">
-    <button class="btn btn-orange" id="btnDocx" onclick="gerarDocx()">
-      <div class="spin" id="spinD" style="border-top-color:#fff"></div>
-      <span id="txtD">⬇ Baixar .docx</span>
-    </button>
-    <button class="btn btn-ghost" onclick="ir(1)">← Recomeçar</button>
+  <div class="rev-card">
+    <div class="rev-head"><span class="rev-title">⚠️ Pendências</span><span class="rev-tag">editável</span></div>
+    <div class="rev-body"><div class="editable" id="rPend" contenteditable="true" style="min-height:60px"></div></div>
   </div>
-  <div id="nav4" style="display:none">
-    <button class="btn btn-ghost" onclick="ir(1)">Nova visita</button>
+  <div class="rev-card">
+    <div class="rev-head"><span class="rev-title">✅ Checklist</span></div>
+    <div class="rev-body" id="rCk"></div>
   </div>
 </div>
 
+<!-- ══ TELA 4: SUCESSO ══ -->
+<div class="screen" id="t4">
+  <div class="success-icon">🎉</div>
+  <div class="success-title">Relatório gerado!</div>
+  <p class="success-sub">O arquivo .docx foi baixado.<br>Abra no Word ou Google Docs.</p>
+  <div class="rev-card"><div class="rev-body" id="rResumo" style="font-size:13px;color:#8A857C;line-height:1.8"></div></div>
+</div>
+
+</div><!-- /main -->
+
+<div class="bottom" id="bottomNav">
+  <div id="nav1"><button class="btn btn-green" id="btnProcessar" onclick="processar()"><div class="spin" id="spinP"></div><span id="txtP">Processar com IA →</span></button></div>
+  <div id="nav3" style="display:none">
+    <button class="btn btn-orange" id="btnDocx" onclick="gerarDocx()"><div class="spin" id="spinD" style="border-top-color:#fff"></div><span id="txtD">⬇ Baixar .docx</span></button>
+    <button class="btn btn-ghost" onclick="ir(1)">← Recomeçar</button>
+  </div>
+  <div id="nav4" style="display:none"><button class="btn btn-ghost" onclick="ir(1)">Nova visita</button></div>
+</div>
+
 <script>
-// ── ESTADO ──────────────────────────────────────────────────────────
-var audioFile = null, audioBlob = null;
-var fotos = [];
-var ia = { transcricao:'', textoVisita:'', pendencias:'', legendas:[], checklist:{} };
-var mediaRec = null, recStream = null, recChunks = [], recInt = null, recSecs = 0;
-
-var CKI = [
-  'Tubulações e ralos posicionados',
-  'Soleiras e vãos definidos',
-  'Rebaixos para embutimento',
-  'Tratamento da superfície das lajes',
-  'Correção de caimentos',
-  'Camadas de impermeabilização com qualidade',
-  'Testes de estanqueidade realizados',
-  'Proteção mecânica executada',
-  'Pendências de acabamento'
+var audioFile=null,audioBlob=null,fotos=[],mediaRec=null,recStream=null,recChunks=[],recInt=null,recSecs=0;
+var ia={transcricao:'',textoVisita:'',pendencias:'',legendas:[],checklist:{}};
+var snVals={possuiProjeto:'',possuiEspec:'',adotadoEspec:'',especialista:'',experiencia:'',materiais:'',depositados:''};
+var locais=[
+  {nome:'Reservatório Superior',notas:{}},
+  {nome:'Instalações Sanitárias (Tipo)',notas:{}},
+  {nome:'Térreo - Estacionamento',notas:{}},
+  {nome:'Térreo – Hall / Floreira',notas:{}}
 ];
+var COLS=['Proj.','Regul.','Imp.','Teste','Prot.'];
+var CKI=['Tubulações e ralos posicionados','Soleiras e vãos definidos','Rebaixos para embutimento','Tratamento da superfície das lajes','Correção de caimentos','Camadas de impermeabilização com qualidade','Testes de estanqueidade realizados','Proteção mecânica executada','Pendências de acabamento'];
 
-// ── INIT ────────────────────────────────────────────────────────────
-document.getElementById('dataVisita').value = new Date().toISOString().split('T')[0];
+document.getElementById('dataVisita').value=new Date().toISOString().split('T')[0];
 atualizarBadges();
+renderLocais();
 
-// ── NAVEGAÇÃO ───────────────────────────────────────────────────────
-function ir(n) {
-  [1,2,3,4].forEach(function(i){ document.getElementById('t'+i).classList.remove('on'); });
+// ── NAVEGAÇÃO ──
+function ir(n){
+  [1,2,3,4].forEach(function(i){document.getElementById('t'+i).classList.remove('on');});
   document.getElementById('t'+n).classList.add('on');
-  document.querySelector('.main').scrollTop = 0;
   window.scrollTo(0,0);
-  var fills = {1:'0%',2:'40%',3:'80%',4:'100%'};
-  document.getElementById('topProg').style.width = fills[n] || '0%';
-  document.getElementById('nav1').style.display = n===1 ? 'block' : 'none';
-  document.getElementById('nav3').style.display = n===3 ? 'block' : 'none';
-  document.getElementById('nav4').style.display = n===4 ? 'block' : 'none';
-  document.getElementById('bottomNav').style.display = n===2 ? 'none' : 'block';
-  if(n===1) atualizarBadges();
+  document.getElementById('topProg').style.width={1:'0%',2:'40%',3:'80%',4:'100%'}[n]||'0%';
+  document.getElementById('nav1').style.display=n===1?'block':'none';
+  document.getElementById('nav3').style.display=n===3?'block':'none';
+  document.getElementById('nav4').style.display=n===4?'block':'none';
+  document.getElementById('bottomNav').style.display=n===2?'none':'block';
+  if(n===1)atualizarBadges();
 }
 
-// ── BADGES ──────────────────────────────────────────────────────────
-function atualizarBadges() {
-  var temAudio = !!(audioFile);
-  var nFotos = fotos.length;
-  var temObra = !!(document.getElementById('nomeObra').value.trim());
-  var bA = document.getElementById('bAudio');
-  var bF = document.getElementById('bFoto');
-  var bO = document.getElementById('bObra');
-  bA.textContent = temAudio ? '🎙 áudio' : '🎙';
-  bA.className = 'badge' + (temAudio ? ' ok' : '');
-  bF.textContent = nFotos > 0 ? ('📷 '+nFotos) : '📷';
-  bF.className = 'badge' + (nFotos > 0 ? ' ok' : '');
-  bO.textContent = temObra ? '✓ obra' : 'obra';
-  bO.className = 'badge' + (temObra ? ' ok' : '');
+// ── BADGES ──
+function atualizarBadges(){
+  var bA=document.getElementById('bAudio'),bF=document.getElementById('bFoto'),bO=document.getElementById('bObra');
+  var temA=!!audioFile,nF=fotos.length,temO=!!(document.getElementById('nomeObra').value.trim());
+  bA.textContent=temA?'🎙 áudio':'🎙'; bA.className='badge'+(temA?' ok':'');
+  bF.textContent=nF>0?('📷 '+nF):'📷'; bF.className='badge'+(nF>0?' ok':'');
+  bO.textContent=temO?'✓ obra':'obra'; bO.className='badge'+(temO?' ok':'');
 }
 
-// ── GRAVAÇÃO ────────────────────────────────────────────────────────
-function toggleGravar() {
-  if(mediaRec && mediaRec.state === 'recording') { pararGravar(); return; }
-  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream) {
-    recStream = stream; recChunks = []; recSecs = 0;
-    mediaRec = new MediaRecorder(stream);
-    mediaRec.ondataavailable = function(e){ if(e.data.size>0) recChunks.push(e.data); };
-    mediaRec.onstop = function(){
-      audioBlob = new Blob(recChunks, {type:'audio/webm'});
-      audioFile = new File([audioBlob], 'gravacao.webm', {type:'audio/webm'});
-      mostrarConfAudio('gravacao.webm (' + fmtSecs(recSecs) + ')');
+// ── SIM/NÃO ──
+function setSN(id,btn,val){
+  snVals[id]=val;
+  var btns=document.getElementById(id).querySelectorAll('button');
+  btns.forEach(function(b){b.classList.remove('ativo');});
+  btn.classList.add('ativo');
+}
+
+// ── LOCAIS ──
+function renderLocais(){
+  var body=document.getElementById('locaisBody');
+  body.innerHTML='';
+  locais.forEach(function(loc,li){
+    var row=document.createElement('div');
+    row.className='nota-row';
+    var html='<input type="text" value="'+loc.nome+'" onchange="locais['+li+'].nome=this.value" style="width:100%">';
+    COLS.forEach(function(col){
+      var cur=loc.notas[col]||'';
+      html+='<div style="display:flex;flex-direction:column;gap:3px">';
+      ['5','3','1','-'].forEach(function(v){
+        var cls='nota-btn'+(cur===v?(' s'+(v==='5'?'5':v==='3'?'3':v==='1'?'1':'n')):'');
+        html+='<button class="'+cls+'" onclick="setNota('+li+',\''+col+'\',\''+v+'\')">'+v+'</button>';
+      });
+      html+='</div>';
+    });
+    row.innerHTML=html;
+    body.appendChild(row);
+  });
+}
+
+function setNota(li,col,val){
+  locais[li].notas[col]=locais[li].notas[col]===val?'':val;
+  renderLocais();
+}
+
+function addLocal(){
+  locais.push({nome:'Novo local',notas:{}});
+  renderLocais();
+}
+
+// ── GRAVAÇÃO ──
+function toggleGravar(){
+  if(mediaRec&&mediaRec.state==='recording'){pararGravar();return;}
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    recStream=stream;recChunks=[];recSecs=0;
+    mediaRec=new MediaRecorder(stream);
+    mediaRec.ondataavailable=function(e){if(e.data.size>0)recChunks.push(e.data);};
+    mediaRec.onstop=function(){
+      audioBlob=new Blob(recChunks,{type:'audio/webm'});
+      audioFile=new File([audioBlob],'gravacao.webm',{type:'audio/webm'});
+      mostrarConfAudio('gravacao.webm ('+fmtSecs(recSecs)+')');
       atualizarBadges();
     };
     mediaRec.start();
-    document.getElementById('iconGravar').textContent = '⏹';
-    document.getElementById('lblGravar').textContent = 'Parar gravação';
-    document.getElementById('hintGravar').style.display = 'none';
-    document.getElementById('recTimer').style.display = 'block';
-    document.getElementById('recBadge').style.display = 'block';
-    document.getElementById('cardGravar').style.borderColor = '#C0392B';
-    recInt = setInterval(function(){
-      recSecs++;
-      document.getElementById('recTimer').textContent = fmtSecs(recSecs);
-    }, 1000);
-  }).catch(function(){
-    alert('Microfone não disponível. Use "Selecionar áudio" para subir um arquivo.');
-  });
+    document.getElementById('iconGravar').textContent='⏹';
+    document.getElementById('lblGravar').textContent='Parar gravação';
+    document.getElementById('hintGravar').style.display='none';
+    document.getElementById('recTimer').style.display='block';
+    document.getElementById('recBadge').style.display='block';
+    document.getElementById('cardGravar').style.borderColor='#C0392B';
+    recInt=setInterval(function(){recSecs++;document.getElementById('recTimer').textContent=fmtSecs(recSecs);},1000);
+  }).catch(function(){alert('Microfone não disponível. Use "Selecionar áudio".');});
 }
 
-function pararGravar() {
-  if(mediaRec) { mediaRec.stop(); recStream.getTracks().forEach(function(t){t.stop();}); }
+function pararGravar(){
+  if(mediaRec){mediaRec.stop();recStream.getTracks().forEach(function(t){t.stop();});}
   clearInterval(recInt);
-  document.getElementById('iconGravar').textContent = '✅';
-  document.getElementById('lblGravar').textContent = 'Áudio gravado';
-  document.getElementById('hintGravar').textContent = 'Toque para regravar';
-  document.getElementById('hintGravar').style.display = 'block';
-  document.getElementById('recTimer').style.display = 'none';
-  document.getElementById('recBadge').style.display = 'none';
-  document.getElementById('cardGravar').style.borderColor = '#2D6A45';
+  document.getElementById('iconGravar').textContent='✅';
+  document.getElementById('lblGravar').textContent='Áudio gravado';
+  document.getElementById('hintGravar').textContent='Toque para regravar';
+  document.getElementById('hintGravar').style.display='block';
+  document.getElementById('recTimer').style.display='none';
+  document.getElementById('recBadge').style.display='none';
+  document.getElementById('cardGravar').style.borderColor='#2D6A45';
 }
 
-function fmtSecs(s){ return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'); }
+function fmtSecs(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
 
-// ── ÁUDIO FILE ──────────────────────────────────────────────────────
-function setAudio(e) {
-  var f = e.target.files[0]; if(!f) return;
-  audioFile = f; audioBlob = null;
-  mostrarConfAudio(f.name);
-  atualizarBadges();
+// ── ÁUDIO FILE ──
+function setAudio(e){
+  var f=e.target.files[0];if(!f)return;
+  audioFile=f;audioBlob=null;
+  mostrarConfAudio(f.name);atualizarBadges();
 }
-function mostrarConfAudio(txt) {
-  var c = document.getElementById('confAudio');
-  document.getElementById('confAudioTxt').textContent = '🎙 ' + txt;
-  c.classList.add('on');
+function mostrarConfAudio(txt){
+  document.getElementById('confAudioTxt').textContent='🎙 '+txt;
+  document.getElementById('confAudio').classList.add('on');
 }
-function remAudio() {
-  audioFile = null; audioBlob = null;
+function remAudio(){
+  audioFile=null;audioBlob=null;
   document.getElementById('confAudio').classList.remove('on');
-  document.getElementById('iconGravar').textContent = '🎙';
-  document.getElementById('lblGravar').textContent = 'Gravar áudio agora';
-  document.getElementById('hintGravar').textContent = 'Toque para iniciar gravação';
-  document.getElementById('cardGravar').style.borderColor = '';
+  document.getElementById('iconGravar').textContent='🎙';
+  document.getElementById('lblGravar').textContent='Gravar áudio agora';
+  document.getElementById('hintGravar').textContent='Toque para iniciar gravação';
+  document.getElementById('cardGravar').style.borderColor='';
   atualizarBadges();
 }
 
-// ── FOTOS ───────────────────────────────────────────────────────────
-function addFotos(e) {
-  var files = Array.from(e.target.files);
-  var pending = files.length;
-  files.forEach(function(file) {
-    comprimir(file, function(result) {
-      fotos.push(result);
-      pending--;
-      if(pending === 0) { mostrarConfFotos(); atualizarBadges(); }
-    });
+// ── FOTOS ──
+function addFotos(e){
+  var files=Array.from(e.target.files),pending=files.length;
+  files.forEach(function(file){
+    comprimir(file,function(r){fotos.push(r);pending--;if(pending===0){mostrarConfFotos();atualizarBadges();}});
   });
 }
-
-function comprimir(file, cb) {
-  var img = new Image();
-  var url = URL.createObjectURL(file);
-  img.onload = function() {
+function comprimir(file,cb){
+  var img=new Image(),url=URL.createObjectURL(file);
+  img.onload=function(){
     URL.revokeObjectURL(url);
-    var w = img.width, h = img.height, max = 800;
-    if(w > max || h > max) {
-      if(w > h) { h = Math.round(h*max/w); w = max; }
-      else { w = Math.round(w*max/h); h = max; }
-    }
-    var canvas = document.createElement('canvas');
-    canvas.width = w; canvas.height = h;
-    canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-    var dataUrl = canvas.toDataURL('image/jpeg', 0.75);
-    cb({ file:file, dataUrl:dataUrl });
+    var w=img.width,h=img.height,max=800;
+    if(w>max||h>max){if(w>h){h=Math.round(h*max/w);w=max;}else{w=Math.round(w*max/h);h=max;}}
+    var canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    canvas.getContext('2d').drawImage(img,0,0,w,h);
+    cb({file:file,dataUrl:canvas.toDataURL('image/jpeg',0.75)});
   };
-  img.onerror = function() {
-    var r = new FileReader();
-    r.onload = function(ev){ cb({ file:file, dataUrl:ev.target.result }); };
-    r.readAsDataURL(file);
-  };
-  img.src = url;
+  img.onerror=function(){var r=new FileReader();r.onload=function(ev){cb({file:file,dataUrl:ev.target.result});};r.readAsDataURL(file);};
+  img.src=url;
 }
-
-function mostrarConfFotos() {
-  var n = fotos.length;
-  document.getElementById('confFotosTxt').textContent = '📷 ' + n + ' foto(s) pronta(s)';
+function mostrarConfFotos(){
+  var n=fotos.length;
+  document.getElementById('confFotosTxt').textContent='📷 '+n+' foto(s) pronta(s)';
   document.getElementById('confFotos').classList.add('on');
-  document.getElementById('iconGaleria').textContent = '✅';
-  document.getElementById('hintGaleria').textContent = n + ' foto(s) — toque para adicionar mais';
+  document.getElementById('iconGaleria').textContent='✅';
+  document.getElementById('hintGaleria').textContent=n+' foto(s) — toque para adicionar mais';
   document.getElementById('cardGaleria').classList.add('ok');
 }
-function remFotos() {
-  fotos = [];
+function remFotos(){
+  fotos=[];
   document.getElementById('confFotos').classList.remove('on');
-  document.getElementById('iconGaleria').textContent = '🖼';
-  document.getElementById('hintGaleria').textContent = 'Escolha múltiplas fotos';
+  document.getElementById('iconGaleria').textContent='🖼';
+  document.getElementById('hintGaleria').textContent='Escolha múltiplas fotos';
   document.getElementById('cardGaleria').classList.remove('ok');
   atualizarBadges();
 }
 
-// ── PROGRESSO ───────────────────────────────────────────────────────
-function setProg(pct, label, detail) {
-  document.getElementById('pBar').style.width = pct + '%';
-  document.getElementById('pPct').textContent = pct + '%';
-  document.getElementById('pLabel').textContent = label;
-  if(detail) document.getElementById('pDetail').textContent = detail;
+// ── PROGRESSO ──
+function setProg(pct,label,detail){
+  document.getElementById('pBar').style.width=pct+'%';
+  document.getElementById('pPct').textContent=pct+'%';
+  document.getElementById('pLabel').textContent=label;
+  if(detail)document.getElementById('pDetail').textContent=detail;
+}
+function setPipe(id,state,msg){
+  var el=document.getElementById('p'+id);
+  el.className='pipe '+state;
+  var icons={1:'🎙',2:'📝',3:'📷',4:'⚙️'};
+  el.querySelector('.pipe-dot').textContent=state==='done'?'✓':icons[id];
+  document.getElementById('m'+id).textContent=msg;
 }
 
-function setPipe(id, state, msg) {
-  var el = document.getElementById('p'+id);
-  el.className = 'pipe ' + state;
-  var icons = {1:'🎙',2:'📝',3:'📷',4:'⚙️'};
-  el.querySelector('.pipe-dot').textContent = state==='done' ? '✓' : icons[id];
-  document.getElementById('m'+id).textContent = msg;
-}
-
-// ── PROCESSAR ───────────────────────────────────────────────────────
-function processar() {
-  if(!audioFile && fotos.length===0) { alert('Adicione pelo menos o áudio ou as fotos.'); return; }
-  document.getElementById('btnProcessar').disabled = true;
-  document.getElementById('spinP').style.display = 'block';
-  document.getElementById('txtP').textContent = 'Iniciando…';
+// ── PROCESSAR ──
+function processar(){
+  if(!audioFile&&fotos.length===0){alert('Adicione pelo menos o áudio ou as fotos.');return;}
+  document.getElementById('btnProcessar').disabled=true;
+  document.getElementById('spinP').style.display='block';
+  document.getElementById('txtP').textContent='Iniciando…';
   ir(2);
-  executarProcessamento();
+  executar();
 }
 
-async function executarProcessamento() {
-  try {
-    var nFotos = fotos.length;
-
-    // 1. Transcrição
-    setProg(5, 'Transcrevendo áudio…', 'Enviando gravação para a IA…');
-    setPipe(1, 'run', 'Transcrevendo…');
-    var transcricao = '';
-    if(audioFile) {
-      transcricao = await transcreverAudio(audioFile);
-      ia.transcricao = transcricao;
-    }
-    setPipe(1, 'done', audioFile ? 'Concluído ✓' : 'Sem áudio — ignorado');
-    setProg(25, 'Áudio pronto', 'Organizando o relatório…');
-
-    // 2. Texto
-    setPipe(2, 'run', 'Organizando seções técnicas…');
-    var resultado = await organizarTexto(transcricao);
-    ia.textoVisita = resultado.textoVisita;
-    ia.pendencias = resultado.pendencias;
-    setPipe(2, 'done', 'Relatório estruturado ✓');
-    setProg(45, 'Relatório organizado', nFotos > 0 ? 'Analisando fotos…' : 'Preenchendo checklist…');
-
-    // 3. Fotos
-    if(nFotos > 0) {
-      setPipe(3, 'run', 'Analisando foto 1 de ' + nFotos + '…');
-      ia.legendas = await gerarLegendas(transcricao, nFotos);
-      setPipe(3, 'done', nFotos + ' legendas geradas ✓');
-    } else {
-      setPipe(3, 'done', 'Sem fotos — ignorado');
-      ia.legendas = [];
-    }
-    setProg(75, 'Fotos analisadas', 'Preenchendo checklist…');
-
-    // 4. Checklist
-    setPipe(4, 'run', 'Identificando itens executados…');
-    ia.checklist = await preencherChecklist(transcricao);
-    setPipe(4, 'done', 'Checklist preenchido ✓');
-    setProg(100, 'Concluído! ✓', 'Abrindo revisão…');
-
+async function executar(){
+  try{
+    var nF=fotos.length;
+    // 1
+    setProg(5,'Transcrevendo áudio…','Enviando gravação para a IA…');
+    setPipe(1,'run','Transcrevendo…');
+    var transcricao='';
+    if(audioFile){transcricao=await transcreverAudio(audioFile);ia.transcricao=transcricao;}
+    setPipe(1,'done',audioFile?'Concluído ✓':'Sem áudio — ignorado');
+    setProg(25,'Áudio pronto','Organizando o relatório…');
+    // 2
+    setPipe(2,'run','Organizando seções técnicas…');
+    var res=await organizarTexto(transcricao);
+    ia.textoVisita=res.textoVisita;ia.pendencias=res.pendencias;
+    setPipe(2,'done','Relatório estruturado ✓');
+    setProg(45,'Relatório organizado',nF>0?'Analisando fotos…':'Preenchendo checklist…');
+    // 3
+    if(nF>0){
+      setPipe(3,'run','Analisando foto 1 de '+nF+'…');
+      ia.legendas=await gerarLegendas(transcricao,nF);
+      setPipe(3,'done',nF+' legendas geradas ✓');
+    }else{setPipe(3,'done','Sem fotos — ignorado');ia.legendas=[];}
+    setProg(75,'Fotos analisadas','Preenchendo checklist…');
+    // 4
+    setPipe(4,'run','Identificando itens executados…');
+    ia.checklist=await preencherChecklist(transcricao);
+    setPipe(4,'done','Checklist preenchido ✓');
+    setProg(100,'Concluído! ✓','Abrindo revisão…');
     await esperar(800);
-    mostrarRevisao();
-    ir(3);
-
-  } catch(err) {
+    mostrarRevisao();ir(3);
+  }catch(err){
     console.error(err);
-    alert('Erro no processamento: ' + err.message);
-    document.getElementById('btnProcessar').disabled = false;
-    document.getElementById('spinP').style.display = 'none';
-    document.getElementById('txtP').textContent = 'Processar com IA →';
+    alert('Erro: '+err.message);
+    document.getElementById('btnProcessar').disabled=false;
+    document.getElementById('spinP').style.display='none';
+    document.getElementById('txtP').textContent='Processar com IA →';
     ir(1);
   }
 }
 
-// ── IA ──────────────────────────────────────────────────────────────
-async function claude(messages, maxTok) {
-  var res = await fetch('https://api.anthropic.com/v1/messages', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens: maxTok||1500, messages: messages })
+// ── IA ──
+async function claude(messages,maxTok){
+  var res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:maxTok||1500,messages:messages})
   });
-  var data = await res.json();
-  if(data.error) throw new Error(data.error.message);
-  return data.content && data.content[0] ? data.content[0].text : '';
+  var data=await res.json();
+  if(data.error)throw new Error(data.error.message);
+  return data.content&&data.content[0]?data.content[0].text:'';
 }
 
-async function transcreverAudio(file) {
-  return new Promise(function(resolve) {
-    var reader = new FileReader();
-    reader.onload = async function(e) {
-      var b64 = e.target.result.split(',')[1];
-      var mime = file.type || 'audio/mpeg';
-      try {
-        var res = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514', max_tokens: 2000,
-            messages: [{ role:'user', content: [
-              { type:'document', source:{ type:'base64', media_type:mime, data:b64 } },
-              { type:'text', text:'Transcreva fielmente este áudio em português. Retorne apenas a transcrição.' }
-            ]}]
-          })
+async function transcreverAudio(file){
+  return new Promise(function(resolve){
+    var reader=new FileReader();
+    reader.onload=async function(e){
+      try{
+        // Tenta Whisper (OpenAI) primeiro
+        var blob=new Blob([file],{type:file.type||'audio/mpeg'});
+        var formData=new FormData();
+        formData.append('file',blob,file.name||'audio.m4a');
+        formData.append('model','whisper-1');
+        formData.append('language','pt');
+        var res=await fetch('https://api.openai.com/v1/audio/transcriptions',{
+          method:'POST',
+          headers:{'Authorization':'Bearer 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'},
+          body:formData
         });
-        var d = await res.json();
-        if(d.content && d.content[0] && d.content[0].text) { resolve(d.content[0].text); }
-        else {
-          var nota = prompt('Não foi possível transcrever automaticamente.\nCole um resumo da gravação:') || '';
-          resolve(nota);
-        }
-      } catch(err) {
-        var nota = prompt('Erro na transcrição.\nCole um resumo:') || '';
-        resolve(nota);
+        var d=await res.json();
+        if(d.text){resolve(d.text);}
+        else{var n=prompt('Transcrição não retornou texto.\nCole um resumo da gravação:');resolve(n||'');}
+      }catch(err){
+        // Fallback: pede texto manual
+        var n=prompt('Erro na transcrição automática.\nCole aqui um resumo da gravação (ou cancele para continuar sem transcrição):');
+        resolve(n||'');
       }
     };
     reader.readAsDataURL(file);
   });
 }
 
-async function organizarTexto(t) {
-  var obra = document.getElementById('nomeObra').value;
-  var prompt = 'Você é engenheiro especialista em impermeabilização. Organize a transcrição abaixo em texto técnico para "VISITA A OBRA". Use subtítulos em MAIÚSCULAS (SEGURANÇA E SAÚDE OCUPACIONAL, IMPERMEABILIZAÇÃO E PREPARAÇÃO DE SUPERFÍCIE, DETALHAMENTO TÉCNICO, CONSIDERAÇÕES FINAIS). Parágrafos corridos, sem bullets.\n\nDepois extraia as PENDÊNCIAS DE DEFINIÇÕES (uma por linha).\n\nObra: ' + (obra||'não informado') + '\nTranscrição: ' + (t||'(sem transcrição)') + '\n\nResponda SOMENTE JSON válido sem markdown: {"textoVisita":"...","pendencias":"pend1\\npend2"}';
-  var raw = await claude([{role:'user', content:prompt}], 2500);
-  try {
-    var clean = raw.replace(/```json|```/g,'').trim();
-    return JSON.parse(clean);
-  } catch(e) { return { textoVisita: raw, pendencias: '' }; }
+async function organizarTexto(t){
+  var obra=document.getElementById('nomeObra').value;
+  var prompt='Você é engenheiro especialista em impermeabilização. Organize a transcrição abaixo em texto técnico para "VISITA A OBRA". Use subtítulos em MAIÚSCULAS (SEGURANÇA E SAÚDE OCUPACIONAL, IMPERMEABILIZAÇÃO E PREPARAÇÃO DE SUPERFÍCIE, DETALHAMENTO TÉCNICO, CONSIDERAÇÕES FINAIS). Parágrafos corridos sem bullets.\n\nDepois extraia as PENDÊNCIAS DE DEFINIÇÕES (uma por linha).\n\nObra: '+(obra||'não informado')+'\nTranscrição: '+(t||'(sem transcrição)')+'\n\nResponda SOMENTE JSON válido sem markdown: {"textoVisita":"...","pendencias":"pend1\\npend2"}';
+  var raw=await claude([{role:'user',content:prompt}],2500);
+  try{return JSON.parse(raw.replace(/```json|```/g,'').trim());}
+  catch(e){return{textoVisita:raw,pendencias:''};}
 }
 
-async function gerarLegendas(transcricao, nFotos) {
-  var legendas = new Array(nFotos);
-  var LOTE = 3;
-  for(var i=0; i<nFotos; i+=LOTE) {
-    var fim = Math.min(i+LOTE, nFotos);
-    setPipe(3, 'run', 'Foto ' + (i+1) + '–' + fim + ' de ' + nFotos + '…');
-    var pct = 45 + Math.round((i/nFotos)*30);
-    setProg(pct, 'Analisando fotos…', (i+1) + ' de ' + nFotos + ' fotos processadas');
-    var promessas = [];
-    for(var j=i; j<fim; j++) {
-      promessas.push(gerarLegenda(j, transcricao));
-    }
-    var resultados = await Promise.all(promessas);
-    for(var k=0; k<resultados.length; k++) { legendas[i+k] = resultados[k]; }
-    if(fim < nFotos) await esperar(300);
+async function gerarLegendas(transcricao,nFotos){
+  var legendas=new Array(nFotos),LOTE=2;
+  for(var i=0;i<nFotos;i+=LOTE){
+    var fim=Math.min(i+LOTE,nFotos);
+    setPipe(3,'run','Foto '+(i+1)+'–'+fim+' de '+nFotos+'…');
+    setProg(45+Math.round((i/nFotos)*30),'Analisando fotos…',(i+1)+' de '+nFotos+' fotos processadas');
+    var promises=[];
+    for(var j=i;j<fim;j++){promises.push(gerarLegenda(j,transcricao));}
+    var results=await Promise.all(promises);
+    for(var k=0;k<results.length;k++){legendas[i+k]=results[k];}
+    if(fim<nFotos)await esperar(800);
   }
   return legendas;
 }
 
-async function gerarLegenda(idx, transcricao) {
-  var b64 = fotos[idx].dataUrl.split(',')[1];
-  var mt = fotos[idx].file.type || 'image/jpeg';
-  var ctx = transcricao ? 'Contexto da visita: ' + transcricao.substring(0,400) : '';
-  try {
-    var res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514', max_tokens: 120,
-        messages: [{ role:'user', content: [
-          { type:'image', source:{ type:'base64', media_type:mt, data:b64 } },
-          { type:'text', text:'Foto ' + (idx+1) + ' de visita a obra de impermeabilização. ' + ctx + '\nEscreva legenda técnica curta (max 100 chars). Apenas a legenda, sem aspas.' }
-        ]}]
-      })
-    });
-    var d = await res.json();
-    return (d.content && d.content[0] ? d.content[0].text.trim() : '') || ('Fotografia ' + (idx+1));
-  } catch(e) { return 'Fotografia ' + (idx+1); }
+async function gerarLegenda(idx,transcricao){
+  var b64=fotos[idx].dataUrl.split(',')[1];
+  var mt=fotos[idx].file.type||'image/jpeg';
+  var ctx=transcricao?'Contexto: '+transcricao.substring(0,400):'';
+  for(var t=0;t<3;t++){
+    try{
+      var res=await fetch('https://api.anthropic.com/v1/messages',{
+        method:'POST',headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:120,
+          messages:[{role:'user',content:[
+            {type:'image',source:{type:'base64',media_type:mt,data:b64}},
+            {type:'text',text:'Foto '+(idx+1)+' de visita a obra de impermeabilização. '+ctx+'\nEscreva legenda técnica curta (max 100 chars). Apenas a legenda.'}
+          ]}]})
+      });
+      var d=await res.json();
+      return (d.content&&d.content[0]?d.content[0].text.trim():'')||('Fotografia '+(idx+1));
+    }catch(e){if(t<2)await esperar(2000);}
+  }
+  return 'Fotografia '+(idx+1);
 }
 
-async function preencherChecklist(t) {
-  if(!t) return {};
-  var items = CKI.map(function(it,i){ return i+':'+it; }).join('\n');
-  var raw = await claude([{role:'user', content:'Checklist de visita a obra. Para cada item responda S, N ou NA.\n'+items+'\nTranscrição: '+t.substring(0,1000)+'\nResponda SOMENTE JSON sem markdown: {"0":"S","1":"N",...}'}], 300);
-  try { return JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-  catch(e) { return {}; }
+async function preencherChecklist(t){
+  if(!t)return{};
+  var items=CKI.map(function(it,i){return i+':'+it;}).join('\n');
+  var raw=await claude([{role:'user',content:'Checklist de visita a obra. Para cada item responda S, N ou NA.\n'+items+'\nTranscrição: '+t.substring(0,1000)+'\nResponda SOMENTE JSON sem markdown: {"0":"S","1":"N",...}'}],300);
+  try{return JSON.parse(raw.replace(/```json|```/g,'').trim());}
+  catch(e){return{};}
 }
 
-// ── REVISÃO ─────────────────────────────────────────────────────────
-function mostrarRevisao() {
-  document.getElementById('rTexto').textContent = ia.textoVisita;
-  document.getElementById('rPend').textContent = ia.pendencias;
-  var ck = document.getElementById('rCk');
-  ck.innerHTML = '';
-  CKI.forEach(function(item, i) {
-    var v = ia.checklist[String(i)] || 'NA';
-    var row = document.createElement('div');
-    row.className = 'ck-row';
-    row.innerHTML = '<div class="ck-label">' + item + '</div>' +
-      '<select class="ck-sel" id="ck'+i+'">' +
-      '<option value="S"' + (v==='S'?' selected':'') + '>✓ Sim</option>' +
-      '<option value="N"' + (v==='N'?' selected':'') + '>✕ Não</option>' +
-      '<option value="NA"' + (v==='NA'?' selected':'') + '>— N/A</option>' +
-      '</select>';
+// ── REVISÃO ──
+function mostrarRevisao(){
+  document.getElementById('rTexto').textContent=ia.textoVisita;
+  document.getElementById('rPend').textContent=ia.pendencias;
+  var ck=document.getElementById('rCk');ck.innerHTML='';
+  CKI.forEach(function(item,i){
+    var v=ia.checklist[String(i)]||'NA';
+    var row=document.createElement('div');row.className='ck-row';
+    row.innerHTML='<div class="ck-label">'+item+'</div><select class="ck-sel" id="ck'+i+'"><option value="S"'+(v==='S'?' selected':'')+'>✓ Sim</option><option value="N"'+(v==='N'?' selected':'')+'>✕ Não</option><option value="NA"'+(v==='NA'?' selected':'')+'>— N/A</option></select>';
     ck.appendChild(row);
   });
 }
 
-// ── GERAR DOCX ──────────────────────────────────────────────────────
-async function gerarDocx() {
-  var btn = document.getElementById('btnDocx');
-  btn.disabled = true;
-  document.getElementById('spinD').style.display = 'block';
-  document.getElementById('txtD').textContent = 'Gerando…';
-  try {
-    var D = docx;
-    var W = 9360;
-    var bd = function(c){ return {style:D.BorderStyle.SINGLE,size:1,color:c||'CCCCCC'}; };
-    var bords = function(c){ var b=bd(c); return {top:b,bottom:b,left:b,right:b}; };
-    var cell = function(txt,o) {
-      o = o||{};
+// ── GERAR DOCX ──
+async function gerarDocx(){
+  var btn=document.getElementById('btnDocx');
+  btn.disabled=true;document.getElementById('spinD').style.display='block';document.getElementById('txtD').textContent='Gerando…';
+  try{
+    var D=docx,W=9360;
+    var bd=function(c){return{style:D.BorderStyle.SINGLE,size:1,color:c||'CCCCCC'};};
+    var bords=function(c){var b=bd(c);return{top:b,bottom:b,left:b,right:b};};
+    var cell=function(txt,o){
+      o=o||{};
       return new D.TableCell({
-        borders: bords(o.bc||'CCCCCC'),
-        shading: o.bg ? {fill:o.bg,type:D.ShadingType.CLEAR} : undefined,
-        width: o.w ? {size:o.w,type:D.WidthType.DXA} : undefined,
-        verticalAlign: D.VerticalAlign.CENTER,
-        margins: {top:80,bottom:80,left:120,right:120},
-        children: [new D.Paragraph({
-          alignment: o.center ? D.AlignmentType.CENTER : D.AlignmentType.LEFT,
-          children: [new D.TextRun({text:String(txt||''),bold:!!o.bold,size:o.sz||22,font:'Arial',color:o.color||'000000',italics:!!o.italic})]
+        borders:bords(o.bc||'CCCCCC'),
+        shading:o.bg?{fill:o.bg,type:D.ShadingType.CLEAR}:undefined,
+        width:o.w?{size:o.w,type:D.WidthType.DXA}:undefined,
+        verticalAlign:D.VerticalAlign.CENTER,
+        margins:{top:80,bottom:80,left:120,right:120},
+        children:[new D.Paragraph({
+          alignment:o.center?D.AlignmentType.CENTER:D.AlignmentType.LEFT,
+          children:[new D.TextRun({text:String(txt||''),bold:!!o.bold,size:o.sz||22,font:'Arial',color:o.color||'000000',italics:!!o.italic})]
         })]
       });
     };
-    var p = function(txt,o) {
-      o = o||{};
+    var p=function(txt,o){
+      o=o||{};
       return new D.Paragraph({
-        alignment: o.center ? D.AlignmentType.CENTER : D.AlignmentType.LEFT,
-        spacing: {before:o.before||60,after:o.after||60},
-        children: [new D.TextRun({text:String(txt||''),bold:!!o.bold,size:o.sz||22,font:'Arial',color:o.color||'000000',italics:!!o.italic})]
+        alignment:o.center?D.AlignmentType.CENTER:D.AlignmentType.LEFT,
+        spacing:{before:o.before||60,after:o.after||60},
+        children:[new D.TextRun({text:String(txt||''),bold:!!o.bold,size:o.sz||22,font:'Arial',color:o.color||'000000',italics:!!o.italic})]
       });
     };
-    var hdr = function(txt) {
+    var hdr=function(txt){
       return new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[W],
         rows:[new D.TableRow({children:[cell(txt,{bg:'1F4E79',bold:true,sz:22,center:true,color:'FFFFFF',bc:'1F4E79'})]})]});
     };
 
-    var ch = [];
-    var nome = document.getElementById('nomeObra').value||'';
-    var data = document.getElementById('dataVisita').value||'';
-    var const_ = document.getElementById('construtora').value||'';
-    var num = document.getElementById('numRvo').value||'';
-    var end_ = document.getElementById('endereco').value||'';
-    var exec_ = document.getElementById('executor').value||'';
+    var ch=[];
+    var nome=document.getElementById('nomeObra').value||'';
+    var data=document.getElementById('dataVisita').value||'';
+    var numRvo=document.getElementById('numRvo').value||'';
+    var end_=document.getElementById('endereco').value||'';
+    var cep_=document.getElementById('cep').value||'';
+    var cid_=document.getElementById('cidade').value||'';
+    var const_=document.getElementById('construtora').value||'';
+    var areaCon=document.getElementById('areaConstruida').value||'';
+    var areaImp=document.getElementById('areaImpermeabilizada').value||'';
+    var exec_=document.getElementById('executor').value||'';
+    var empProj=document.getElementById('empresaProjeto').value||'';
 
-    // Cabeçalho
-    ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[4680,4680],rows:[
-      new D.TableRow({children:[cell('',{bg:'1F4E79',bc:'1F4E79'}),cell('RELATÓRIO DE VISITA A OBRA – RVO',{bg:'1F4E79',bold:true,sz:26,center:true,color:'FFFFFF',bc:'1F4E79'})]}),
-      new D.TableRow({children:[cell('OBRA: '+nome,{bold:true}),cell(data,{center:true,bold:true})]}),
-      new D.TableRow({children:[cell('ENDEREÇO: '+end_),cell('')]}),
-      new D.TableRow({children:[cell('CONSTRUTORA: '+const_),cell(const_,{bold:true})]}),
-      new D.TableRow({children:[cell('EXECUTOR: '+exec_),cell('ARQUIVO: '+num)]}),
+    // ── CABEÇALHO COMPLETO ──
+    ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[6500,2860],rows:[
+      new D.TableRow({children:[
+        cell('RELATÓRIO DE VISITA A OBRA – RVO',{bg:'1F4E79',bold:true,sz:24,color:'FFFFFF',bc:'1F4E79'}),
+        cell(data,{bg:'1F4E79',bold:true,sz:20,center:true,color:'FFFFFF',bc:'1F4E79'})
+      ]}),
+      new D.TableRow({children:[cell('OBRA: '+nome,{bold:true}),cell('ARQUIVO: '+numRvo,{bold:true})]}),
+      new D.TableRow({children:[cell('ENDEREÇO: '+end_),cell('CEP: '+cep_)]}),
+      new D.TableRow({children:[cell(''),cell(cid_)]}),
+      new D.TableRow({children:[cell('CONSTRUTORA: '+const_,{bold:true}),cell('')]}),
+      new D.TableRow({children:[cell('ÁREA CONSTRUÍDA (m²): '+areaCon),cell('ÁREA IMPERMEABILIZADA (m²): '+areaImp)]}),
+      new D.TableRow({children:[cell('EXECUTOR DA APLICAÇÃO: '+exec_),cell('')]}),
+      new D.TableRow({children:[
+        cell('A obra possui projeto de impermeabilização específico?'),
+        cell(snVals.possuiProjeto||'—',{bold:true,center:true})
+      ]}),
+      new D.TableRow({children:[cell('Projeto: '+empProj),cell('')]}),
+      new D.TableRow({children:[
+        cell('A obra possui alguma especificação técnica?'),
+        cell(snVals.possuiEspec||'—',{bold:true,center:true})
+      ]}),
+      new D.TableRow({children:[
+        cell('O projeto/especificação será adotado parcial ou em sua totalidade?'),
+        cell(snVals.adotadoEspec||'—',{bold:true,center:true})
+      ]}),
+      new D.TableRow({children:[
+        cell('A obra possui o acompanhamento de especialista em engenharia de impermeabilização?'),
+        cell(snVals.especialista||'—',{bold:true,center:true})
+      ]}),
+      new D.TableRow({children:[
+        cell('A Empresa de impermeabilização possui experiência técnica?'),
+        cell(snVals.experiencia||'—',{bold:true,center:true})
+      ]}),
+      new D.TableRow({children:[
+        cell('Os materiais já estão na obra?'),
+        cell(snVals.materiais||'—',{bold:true,center:true})
+      ]}),
+      new D.TableRow({children:[
+        cell('Estão depositados de forma correta?'),
+        cell(snVals.depositados||'—',{bold:true,center:true})
+      ]}),
     ]}));
     ch.push(p(''));
 
-    // Texto
+    // ── VISITA A OBRA ──
     ch.push(hdr('VISITA A OBRA'));
-    var tv = document.getElementById('rTexto').textContent || ia.textoVisita;
-    tv.split('\n').forEach(function(l) {
-      if(!l.trim()) return;
-      var isT = l.trim()===l.trim().toUpperCase() && l.trim().length>3;
+    var tv=document.getElementById('rTexto').textContent||ia.textoVisita;
+    tv.split('\n').forEach(function(l){
+      if(!l.trim())return;
+      var isT=l.trim()===l.trim().toUpperCase()&&l.trim().length>3;
       ch.push(p(l.trim(),{bold:isT,sz:isT?22:20,before:isT?120:40,after:isT?60:40}));
     });
     ch.push(p(''));
 
-    // Fotos
-    if(fotos.length > 0) {
+    // ── FOTOS ──
+    if(fotos.length>0){
       ch.push(hdr('RELATÓRIO FOTOGRÁFICO'));
       ch.push(p(''));
-      for(var i=0; i<fotos.length; i+=2) {
-        var mkCell = async function(foto, num2) {
-          var legEl = document.getElementById('ck0'); // dummy
-          var leg = ia.legendas[num2-1] || ('Fotografia '+num2);
-          var b64 = foto.dataUrl.split(',')[1];
-          var tp = foto.file.type && foto.file.type.includes('png') ? 'png' : 'jpg';
-          try {
+      for(var i=0;i<fotos.length;i+=2){
+        var mkCell=async function(foto,num){
+          var leg=ia.legendas[num-1]||('Fotografia '+num);
+          var b64=foto.dataUrl.split(',')[1];
+          var tp=foto.file.type&&foto.file.type.includes('png')?'png':'jpg';
+          try{
             return new D.TableCell({borders:bords('CCCCCC'),width:{size:4500,type:D.WidthType.DXA},margins:{top:80,bottom:80,left:80,right:80},
               children:[
                 new D.Paragraph({alignment:D.AlignmentType.CENTER,children:[new D.ImageRun({data:b64,transformation:{width:260,height:190},type:tp})]}),
-                new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{before:40},children:[new D.TextRun({text:'Fotografia '+(num2)+' – '+leg,bold:true,size:18,font:'Arial'})]})
+                new D.Paragraph({alignment:D.AlignmentType.CENTER,spacing:{before:40},children:[new D.TextRun({text:'Fotografia '+num+' – '+leg,bold:true,size:18,font:'Arial'})]})
               ]});
-          } catch(e) {
+          }catch(e){
             return new D.TableCell({borders:bords('CCCCCC'),width:{size:4500,type:D.WidthType.DXA},margins:{top:80,bottom:80,left:80,right:80},
-              children:[p('Fotografia '+(num2)+' – '+leg,{sz:18})]});
+              children:[p('Fotografia '+num+' – '+leg,{sz:18})]});
           }
         };
-        var ca = await mkCell(fotos[i], i+1);
-        var cb = fotos[i+1] ? await mkCell(fotos[i+1], i+2) :
-          new D.TableCell({borders:bords('CCCCCC'),width:{size:4500,type:D.WidthType.DXA},children:[p('')]});
+        var ca=await mkCell(fotos[i],i+1);
+        var cb=fotos[i+1]?await mkCell(fotos[i+1],i+2):new D.TableCell({borders:bords('CCCCCC'),width:{size:4500,type:D.WidthType.DXA},children:[p('')]});
         ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[4500,4500],rows:[new D.TableRow({children:[ca,cb]})]}));
         ch.push(p(''));
       }
     }
 
-    // Checklist
+    // ── EXECUÇÃO DOS SERVIÇOS ──
     ch.push(hdr('EXECUÇÃO DOS SERVIÇOS'));
     ch.push(p(''));
-    var ckRows = [new D.TableRow({children:[
+    var ckRows=[new D.TableRow({children:[
       cell('ITEM',{bg:'D6E4F0',bold:true,w:5800,sz:18}),
       cell('S',{bg:'D6E4F0',bold:true,center:true,w:600}),
       cell('N',{bg:'D6E4F0',bold:true,center:true,w:600}),
       cell('OBS.',{bg:'D6E4F0',bold:true,w:2360,sz:18})
     ]})];
-    CKI.forEach(function(item,i) {
-      var el = document.getElementById('ck'+i);
-      var v = el ? el.value : (ia.checklist[String(i)]||'NA');
+    CKI.forEach(function(item,i){
+      var el=document.getElementById('ck'+i);
+      var v=el?el.value:(ia.checklist[String(i)]||'NA');
       ckRows.push(new D.TableRow({children:[
         cell(item,{w:5800,sz:18}),
         cell(v==='S'?'X':'',{center:true,bold:true,w:600}),
@@ -763,10 +781,36 @@ async function gerarDocx() {
     ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[5800,600,600,2360],rows:ckRows}));
     ch.push(p(''));
 
-    // Pendências
-    var pTxt = document.getElementById('rPend').textContent || ia.pendencias;
-    var pLines = pTxt.split('\n').filter(function(l){return l.trim();});
-    if(pLines.length > 0) {
+    // ── AVALIAÇÃO POR LOCAL ──
+    ch.push(hdr('AVALIAÇÃO POR LOCAL'));
+    ch.push(p(''));
+    var colsW=[3360,1000,1000,1000,1000,1000];
+    var locRows=[new D.TableRow({children:[
+      cell('Local',{bg:'D6E4F0',bold:true,w:3360,sz:18}),
+      cell('Projeto',{bg:'D6E4F0',bold:true,center:true,w:1000,sz:16}),
+      cell('Regul.',{bg:'D6E4F0',bold:true,center:true,w:1000,sz:16}),
+      cell('Imperm.',{bg:'D6E4F0',bold:true,center:true,w:1000,sz:16}),
+      cell('Teste',{bg:'D6E4F0',bold:true,center:true,w:1000,sz:16}),
+      cell('Prot.',{bg:'D6E4F0',bold:true,center:true,w:1000,sz:16})
+    ]})];
+    locais.forEach(function(loc){
+      locRows.push(new D.TableRow({children:[
+        cell(loc.nome,{w:3360,sz:18}),
+        cell(loc.notas['Proj.']||'-',{center:true,w:1000,sz:18}),
+        cell(loc.notas['Regul.']||'-',{center:true,w:1000,sz:18}),
+        cell(loc.notas['Imp.']||'-',{center:true,w:1000,sz:18}),
+        cell(loc.notas['Teste']||'-',{center:true,w:1000,sz:18}),
+        cell(loc.notas['Prot.']||'-',{center:true,w:1000,sz:18})
+      ]}));
+    });
+    ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:colsW,rows:locRows}));
+    ch.push(p('1 – Situação inferior | 3 – Situação Intermediária | 5 – Situação Superior | - Ausência da etapa',{italic:true,sz:18,before:60}));
+    ch.push(p(''));
+
+    // ── PENDÊNCIAS ──
+    var pTxt=document.getElementById('rPend').textContent||ia.pendencias;
+    var pLines=pTxt.split('\n').filter(function(l){return l.trim();});
+    if(pLines.length>0){
       ch.push(hdr('PENDÊNCIAS DE DEFINIÇÕES'));
       ch.push(p(''));
       ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[W],
@@ -774,50 +818,48 @@ async function gerarDocx() {
       ch.push(p(''));
     }
 
-    // Assinatura
+    // ── ASSINATURA ──
     ch.push(p('No aguardo do pronunciamento de V. Sas., subscrevemo-nos'));
     ch.push(p('Atenciosamente',{before:120}));
     ch.push(p(''));
+    ch.push(p('Recebimento em _____/______/ '+new Date().getFullYear()));
+    ch.push(p(''));
     ch.push(p('_________________________________'));
+    ch.push(p(''));
     ch.push(p('E A PEREIRA HILÚ – Engenharia ME',{bold:true}));
     ch.push(p('EGBERTO ACYR PEREIRA HILÚ',{bold:true}));
     ch.push(p('ENG. CIVIL - CREA PR 22.163 D / PR'));
     ch.push(p(''));
 
-    // Rodapé
+    // ── RODAPÉ ──
     ch.push(new D.Table({width:{size:W,type:D.WidthType.DXA},columnWidths:[800,8560],
       rows:[new D.TableRow({children:[
         cell('',{bg:'1F4E79',bc:'1F4E79',w:800}),
-        cell('E A PEREIRA HILÚ ENGENHARIA ME – CNPJ 30.090.359/0001-68 – Rua Waterloo Marchesini, 14 – Curitiba-PR – (41) 991157220',{w:8560,sz:18})
+        cell('E A PEREIRA HILÚ ENGENHARIA ME – CNPJ 30.090.359/0001-68 – Rua Waterloo Marchesini, 14 – Seminário – Curitiba-PR – CEP 80.740-490 – Fone: (41) 991157220',{w:8560,sz:18})
       ]})]}));
 
-    var doc = new D.Document({sections:[{
+    var doc=new D.Document({sections:[{
       properties:{page:{size:{width:11906,height:16838},margin:{top:720,right:720,bottom:720,left:720}}},
       children:ch
     }]});
-
-    var buf = await D.Packer.toBuffer(doc);
-    var blob = new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
-    var url = URL.createObjectURL(blob);
-    var a = document.createElement('a');
-    var on = (nome||'relatorio').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
-    var dt = (data||'').replace(/-/g,'');
-    a.href=url; a.download='RVO_'+on+'_'+dt+'.docx'; a.click();
+    var buf=await D.Packer.toBuffer(doc);
+    var blob=new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    var on=(nome||'relatorio').replace(/\s+/g,'_').replace(/[^a-zA-Z0-9_]/g,'');
+    var dt=(data||'').replace(/-/g,'');
+    a.href=url;a.download='RVO_'+on+'_'+dt+'.docx';a.click();
     URL.revokeObjectURL(url);
 
-    document.getElementById('rResumo').innerHTML = 'Obra: <b>'+nome+'</b><br>Data: <b>'+data+'</b><br>Fotos: <b>'+fotos.length+'</b><br>Pendências: <b>'+pLines.length+'</b>';
+    document.getElementById('rResumo').innerHTML='Obra: <b>'+nome+'</b><br>Data: <b>'+data+'</b><br>Fotos: <b>'+fotos.length+'</b><br>Pendências: <b>'+pLines.length+'</b>';
     ir(4);
-
-  } catch(err) {
-    console.error(err);
-    alert('Erro ao gerar .docx: ' + err.message);
+  }catch(err){
+    console.error(err);alert('Erro ao gerar .docx: '+err.message);
   }
-  btn.disabled = false;
-  document.getElementById('spinD').style.display = 'none';
-  document.getElementById('txtD').textContent = '⬇ Baixar .docx';
+  btn.disabled=false;document.getElementById('spinD').style.display='none';document.getElementById('txtD').textContent='⬇ Baixar .docx';
 }
 
-function esperar(ms){ return new Promise(function(r){setTimeout(r,ms);}); }
+function esperar(ms){return new Promise(function(r){setTimeout(r,ms);});}
 </script>
 </body>
 </html>
