@@ -113,24 +113,21 @@ h2 em{color:#2D6A45;font-style:normal}
   <h2>Coleta da <em>visita</em></h2>
   <p class="sub">Preencha os dados, suba o áudio e as fotos.</p>
 
-  <div class="sec">Áudio da visita</div>
-  <div class="card" id="cardGravar" onclick="toggleGravar()">
-    <div class="ci" id="iconGravar">🎙</div>
-    <div class="ct">
-      <div class="ct-title" id="lblGravar">Gravar áudio agora</div>
-      <div class="ct-hint" id="hintGravar">Toque para iniciar gravação</div>
-      <div id="recTimer" style="font-size:20px;font-weight:700;color:#C0392B;display:none;margin-top:4px">00:00</div>
+  <div class="sec">Relato da visita</div>
+
+  <div style="background:#fff;border:1.5px solid #D4CFC6;border-radius:12px;padding:16px;margin-bottom:10px;">
+    <div style="font-weight:600;font-size:15px;margin-bottom:4px;">📝 Cole o texto da visita</div>
+    <div style="font-size:12px;color:#8A857C;margin-bottom:12px;">Transcreva seu áudio no Claude.ai e cole o texto aqui. Ou descreva diretamente o que observou na obra.</div>
+    <textarea id="textoVisitaInput" rows="6" oninput="atualizarBadges()" style="width:100%;background:#F5F2ED;border:1.5px solid #D4CFC6;border-radius:10px;padding:12px;font-size:14px;font-family:inherit;outline:none;resize:vertical;transition:border-color .18s" placeholder="Ex: Visitei o reservatório superior, a manta estava bem aplicada mas faltou reforço no rodapé. A chuva lavou o primer em alguns trechos. Equipe sem EPI adequado..."></textarea>
+    <div style="font-size:11px;color:#8A857C;margin-top:6px;" id="textoCount">0 caracteres</div>
+  </div>
+
+  <div style="background:rgba(45,106,69,.06);border:1px solid rgba(45,106,69,.2);border-radius:10px;padding:12px;margin-bottom:10px;">
+    <div style="font-size:12px;color:#1A3A2A;line-height:1.6;">
+      💡 <b>Como transcrever o áudio:</b><br>
+      Abra o <b>Claude.ai</b> → anexe o áudio → peça: <i>"Transcreva este áudio de visita a obra"</i> → copie e cole aqui.
     </div>
-    <div id="recBadge" style="display:none;color:#C0392B;font-weight:700;font-size:13px">● REC</div>
   </div>
-  <div style="text-align:center;color:#8A857C;font-size:12px;margin:6px 0">ou suba um arquivo</div>
-  <div class="card">
-    <input type="file" accept="audio/*,video/*,.m4a,.amr,.3gp,.aac" onchange="setAudio(event)">
-    <div class="ci">📂</div>
-    <div class="ct"><div class="ct-title">Selecionar áudio</div><div class="ct-hint">M4A, AMR, MP3 — qualquer formato Samsung</div></div>
-    <div style="color:#8A857C;font-size:20px">›</div>
-  </div>
-  <div class="conf" id="confAudio"><span id="confAudioTxt"></span><button onclick="remAudio()">✕ remover</button></div>
 
   <div class="sec">Fotos da obra</div>
   <div class="card">
@@ -241,7 +238,7 @@ h2 em{color:#2D6A45;font-style:normal}
     <div class="prog-detail" id="pDetail">Preparando…</div>
   </div>
   <div class="pipeline">
-    <div class="pipe" id="p1"><div class="pipe-dot">🎙</div><div class="pipe-info"><div class="pipe-name">Transcrição do áudio</div><div class="pipe-msg" id="m1">Aguardando…</div></div></div>
+    <div class="pipe" id="p1"><div class="pipe-dot">📝</div><div class="pipe-info"><div class="pipe-name">Texto da visita</div><div class="pipe-msg" id="m1">Aguardando…</div></div></div>
     <div class="pipe" id="p2"><div class="pipe-dot">📝</div><div class="pipe-info"><div class="pipe-name">Organização do relatório</div><div class="pipe-msg" id="m2">Aguardando…</div></div></div>
     <div class="pipe" id="p3"><div class="pipe-dot">📷</div><div class="pipe-info"><div class="pipe-name">Legendas das fotos</div><div class="pipe-msg" id="m3">Aguardando…</div></div></div>
     <div class="pipe" id="p4"><div class="pipe-dot">⚙️</div><div class="pipe-info"><div class="pipe-name">Checklist automático</div><div class="pipe-msg" id="m4">Aguardando…</div></div></div>
@@ -319,10 +316,15 @@ function ir(n){
 // ── BADGES ──
 function atualizarBadges(){
   var bA=document.getElementById('bAudio'),bF=document.getElementById('bFoto'),bO=document.getElementById('bObra');
-  var temA=!!audioFile,nF=fotos.length,temO=!!(document.getElementById('nomeObra').value.trim());
-  bA.textContent=temA?'🎙 áudio':'🎙'; bA.className='badge'+(temA?' ok':'');
+  var texto=document.getElementById('textoVisitaInput').value.trim();
+  var temA=texto.length>10;
+  var nF=fotos.length,temO=!!(document.getElementById('nomeObra').value.trim());
+  bA.textContent=temA?'📝 texto':'📝'; bA.className='badge'+(temA?' ok':'');
   bF.textContent=nF>0?('📷 '+nF):'📷'; bF.className='badge'+(nF>0?' ok':'');
   bO.textContent=temO?'✓ obra':'obra'; bO.className='badge'+(temO?' ok':'');
+  // contador de caracteres
+  var cnt=document.getElementById('textoCount');
+  if(cnt) cnt.textContent=texto.length+' caracteres'+(texto.length>0?' ✓':'');
 }
 
 // ── SIM/NÃO ──
@@ -477,7 +479,8 @@ function setPipe(id,state,msg){
 
 // ── PROCESSAR ──
 function processar(){
-  if(!audioFile&&fotos.length===0){alert('Adicione pelo menos o áudio ou as fotos.');return;}
+  var texto=document.getElementById('textoVisitaInput').value.trim();
+  if(!texto && fotos.length===0){alert('Adicione pelo menos o texto da visita ou as fotos.');return;}
   document.getElementById('btnProcessar').disabled=true;
   document.getElementById('spinP').style.display='block';
   document.getElementById('txtP').textContent='Iniciando…';
@@ -488,27 +491,29 @@ function processar(){
 async function executar(){
   try{
     var nF=fotos.length;
-    // 1
-    setProg(5,'Transcrevendo áudio…','Enviando gravação para a IA…');
-    setPipe(1,'run','Transcrevendo…');
-    var transcricao='';
-    if(audioFile){transcricao=await transcreverAudio(audioFile);ia.transcricao=transcricao;}
-    setPipe(1,'done',audioFile?'Concluído ✓':'Sem áudio — ignorado');
-    setProg(25,'Áudio pronto','Organizando o relatório…');
-    // 2
+    var transcricao=document.getElementById('textoVisitaInput').value.trim();
+
+    // 1. Texto já disponível — pula transcrição
+    setProg(20,'Texto recebido ✓','Organizando o relatório…');
+    setPipe(1,'done', transcricao.length>10 ? 'Texto recebido ✓' : 'Sem texto — ignorado');
+    ia.transcricao=transcricao;
+
+    // 2. Organizar
     setPipe(2,'run','Organizando seções técnicas…');
     var res=await organizarTexto(transcricao);
     ia.textoVisita=res.textoVisita;ia.pendencias=res.pendencias;
     setPipe(2,'done','Relatório estruturado ✓');
     setProg(45,'Relatório organizado',nF>0?'Analisando fotos…':'Preenchendo checklist…');
-    // 3
+
+    // 3. Fotos
     if(nF>0){
       setPipe(3,'run','Analisando foto 1 de '+nF+'…');
       ia.legendas=await gerarLegendas(transcricao,nF);
       setPipe(3,'done',nF+' legendas geradas ✓');
     }else{setPipe(3,'done','Sem fotos — ignorado');ia.legendas=[];}
     setProg(75,'Fotos analisadas','Preenchendo checklist…');
-    // 4
+
+    // 4. Checklist
     setPipe(4,'run','Identificando itens executados…');
     ia.checklist=await preencherChecklist(transcricao);
     setPipe(4,'done','Checklist preenchido ✓');
