@@ -1887,6 +1887,15 @@ function sugerirVisita(forcarNova){
   if(info){
     if(mesma){var r=mesma.revisoes[mesma.revisoes.length-1];info.textContent='Esta visita já foi emitida ('+r.rev+' em '+new Date(r.emitido).toLocaleDateString('pt-BR')+'). Ao baixar de novo, o app oferece a próxima revisão.';}
     else info.textContent=vs.length?vs.length+' visita(s) registrada(s) nesta obra; última: RVO_'+pad(vs[vs.length-1].visita,2)+' em '+fmtData(vs[vs.length-1].dataVisita)+'.':'Nenhuma visita registrada nesta obra.';
+    // Visita retroativa: data anterior a visitas já registradas
+    var depois=mesma?[]:vs.filter(function(x){return data&&x.dataVisita&&x.dataVisita>data;});
+    if(depois.length){
+      var antes=vs.filter(function(x){return x.dataVisita&&x.dataVisita<data;}).length;
+      var base=info.textContent||'';info.innerHTML='';info.appendChild(document.createTextNode(base));
+      var w=document.createElement('span');w.style.color='#C0392B';
+      w.textContent=' ⚠ Data anterior a '+depois.length+' visita(s) já registrada(s) (ex.: RVO_'+pad(depois[0].visita,2)+' em '+fmtData(depois[0].dataVisita)+'). Pela ordem das datas seria a visita nº '+(antes+1)+(vs.some(function(x){return x.visita===antes+1;})?', mas esse número já existe':'')+'; foi sugerido '+formatRvo(n)+'. Ajuste o nº se preferir.';
+      info.appendChild(w);
+    }
   }
   atualizarCodigo();
 }
@@ -2136,14 +2145,24 @@ function hhmm(ts){var d=new Date(ts);return pad(d.getHours(),2)+':'+pad(d.getMin
 function isoDia(ts){var d=new Date(ts);return d.getFullYear()+'-'+pad(d.getMonth()+1,2)+'-'+pad(d.getDate(),2);}
 function sugerirHorarios(){
   var info=document.getElementById('horasInfo');if(!info)return;
-  var ts=fotos.map(function(f){return f.ts;}).filter(Boolean).sort(function(a,b){return a-b;});
+  // Com fotos de câmera (EXIF), usa só elas: a data de arquivo de fotos antigas ou do WhatsApp costuma ser a do download
+  var nExif=fotos.filter(function(f){return f.tsFonte==='exif';}).length;
+  var ts=fotos.filter(function(f){return !nExif||f.tsFonte==='exif';}).map(function(f){return f.ts;}).filter(Boolean).sort(function(a,b){return a-b;});
   if(!ts.length){info.innerHTML='';return;}
-  var ini=ts[0],fim=ts[ts.length-1],nExif=fotos.filter(function(f){return f.tsFonte==='exif';}).length;
+  var ini=ts[0],fim=ts[ts.length-1];
+  // Visita de mês anterior: se a data ainda é a de hoje (não mexida) e as fotos da câmera são todas de um mesmo dia anterior, adota esse dia
+  var diasExif={};fotos.forEach(function(f){if(f.tsFonte==='exif'&&f.ts)diasExif[isoDia(f.ts)]=1;});
+  var dExif=Object.keys(diasExif),hoje=isoDia(Date.now()),retro='';
+  if(dExif.length===1&&val('dataVisita')===hoje&&dExif[0]<hoje){
+    document.getElementById('dataVisita').value=dExif[0];sugerirVisita();
+    retro=' <span style="color:#2D6A45">✓ Data da visita ajustada para '+fmtData(dExif[0])+', a data das fotos.</span>';
+  }
   var hc=document.getElementById('horaChegada'),hs=document.getElementById('horaSaida');
   if(!hc.value||hc.value===window._hcAuto){hc.value=hhmm(ini);window._hcAuto=hc.value;}
   if(!hs.value||hs.value===window._hsAuto){hs.value=hhmm(fim);window._hsAuto=hs.value;}
   var txt='📷 Sugerido pelas fotos: '+hhmm(ini)+' → '+hhmm(fim)+' ('+fotos.length+' foto(s); '+nExif+' com hora da câmera).';
   if(nExif<fotos.length)txt+=' As demais usam a data do arquivo, que muda se a foto passou pelo WhatsApp.';
+  txt+=retro;
   var dia=isoDia(ini);
   if(val('dataVisita')&&dia!==val('dataVisita'))
     txt+=' <span style="color:#C0392B">⚠ As fotos são de '+fmtData(dia)+', diferente da data da visita.</span> <a href="#" onclick="usarDataFotos(\''+dia+'\');return false;">Usar a data das fotos</a>';
