@@ -248,6 +248,7 @@ h2 em{color:#2D6A45;font-style:normal}
     <div class="ct"><div class="ct-title">Selecionar da galeria</div><div class="ct-hint" id="hintGaleria">Escolha múltiplas fotos</div></div>
     <div style="color:#8A857C;font-size:20px">›</div>
   </div>
+  <button class="reg-btn" id="btnAntigas" onclick="abrirAntigas()">📂 Visitas antigas: ler pasta do OneDrive</button>
   <div class="conf" id="confFotos"><span id="confFotosTxt"></span><button onclick="remFotos()">✕ remover</button></div>
   <div id="fotosPreview" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;"></div>
 
@@ -661,9 +662,9 @@ function remAudio(){
 }
 
 // ── FOTOS ──
-async function addFotos(e){
-  var files=Array.from(e.target.files);
-  if(!files.length)return;
+async function addFotos(e){await addArquivos(Array.from(e.target.files));}
+async function addArquivos(files){
+  if(!files||!files.length)return;
   // Hora de cada foto: EXIF (hora da câmera) ou, na falta, data do arquivo
   var horas=[];
   for(var h=0;h<files.length;h++){var ex=await lerHoraExif(files[h])||{};horas.push({f:files[h],ts:ex.ts||files[h].lastModified,fonte:ex.ts?'exif':'arquivo',lat:ex.lat,lon:ex.lon});}
@@ -2141,6 +2142,116 @@ function lerHoraExif(file){
     }catch(e){res(null);}
   });
 }
+// ── VISITAS ANTIGAS: lê uma pasta (OneDrive sincronizado no PC) e separa as visitas por obra e dia ──
+var _antigas=[],_antDir=null;
+var ANT_IMG=/\.(jpe?g|png|webp)$/i,ANT_TXT=/\.txt$/i,ANT_DOCX=/\.docx$/i;
+function antDataPasta(seg){
+  var m=/(\d{2})[._-](\d{2})[._-](\d{4})/.exec(seg);if(m)return m[3]+'-'+m[2]+'-'+m[1];
+  m=/(\d{4})[._-](\d{2})[._-](\d{2})/.exec(seg);if(m)return m[1]+'-'+m[2]+'-'+m[3];
+  return '';
+}
+function antEhPastaData(seg){return !!antDataPasta(seg)||/^\d{4}$/.test(seg)||/^\d{2}_[A-ZÇÃ]+$/i.test(seg);}
+// Obra: pasta que bate com o Banco de Obras; senão, a pasta logo depois de "MM_MÊS" (estrutura RVO NOVOS); senão, a pasta mais funda que não é data
+function antObra(cam){
+  var obras=getObras(),chaves=Object.keys(obras);
+  for(var i=cam.length-1;i>=0;i--){
+    var n=normTxt(cam[i]);if(!n||antEhPastaData(cam[i]))continue;
+    for(var j=0;j<chaves.length;j++){var o=obras[chaves[j]];if(normTxt(o.nome)===n||normTxt(o.pastaObra)===n)return {chave:chaves[j],nome:o.nome};}
+  }
+  for(var k=0;k<cam.length-1;k++){if(/^\d{2}_[A-ZÇÃ]+$/i.test(cam[k])&&!antEhPastaData(cam[k+1]))return {chave:'',nome:cam[k+1]};}
+  for(var q=cam.length-1;q>=0;q--){if(!antEhPastaData(cam[q]))return {chave:'',nome:cam[q]};}
+  return {chave:'',nome:''};
+}
+async function antVarrer(dir,cam,out,prof){
+  if(prof>8)return;
+  for await (var par of dir.entries()){
+    var nome=par[0],ent=par[1];
+    if(nome.charAt(0)==='.'||nome.charAt(0)==='~')continue;
+    if(ent.kind==='directory')await antVarrer(ent,cam.concat(nome),out,prof+1);
+    else if(ANT_IMG.test(nome)||ANT_TXT.test(nome)||ANT_DOCX.test(nome))out.push({h:ent,nome:nome,cam:cam});
+    if(out.length%50===0)document.getElementById('antMsg').textContent='Procurando arquivos… '+out.length;
+  }
+}
+async function abrirAntigas(outra){
+  if(!window.showDirectoryPicker){alert('Ler a pasta do OneDrive só funciona no Chrome ou Edge do computador.');return;}
+  if(!_antDir||outra){
+    try{_antDir=await window.showDirectoryPicker({id:'ephilus-antigas',mode:'read'});}catch(e){return;}
+  }
+  document.getElementById('antModal').style.display='flex';
+  document.getElementById('antLista').innerHTML='';
+  var msg=document.getElementById('antMsg');msg.textContent='Procurando arquivos…';
+  var arqs=[];
+  try{await antVarrer(_antDir,[_antDir.name],arqs,0);}catch(e){msg.textContent='Não consegui ler a pasta: '+e.message;return;}
+  var grupos={},porPasta={},semData=[],nImg=arqs.filter(function(a){return ANT_IMG.test(a.nome);}).length,lidas=0;
+  for(var i=0;i<arqs.length;i++){
+    var a=arqs[i],pasta=a.cam.join('\\');
+    porPasta[pasta]=porPasta[pasta]||{txt:[],docx:0};
+    if(ANT_TXT.test(a.nome)){porPasta[pasta].txt.push(a.h);continue;}
+    if(ANT_DOCX.test(a.nome)){porPasta[pasta].docx++;continue;}
+    var f=await a.h.getFile(),ex=await lerHoraExif(f)||{};lidas++;
+    if(lidas%20===0)msg.textContent='Lendo a data das fotos… '+lidas+' de '+nImg;
+    var dia=ex.ts?isoDia(ex.ts):'';
+    if(!dia){for(var c=a.cam.length-1;c>=0&&!dia;c--)dia=antDataPasta(a.cam[c]);}
+    if(!dia){semData.push({a:a,f:f,pasta:pasta});continue;}
+    var k=pasta+'|'+dia;
+    if(!grupos[k]){var ob=antObra(a.cam);grupos[k]={pasta:pasta,dia:dia,obra:ob.nome,chave:ob.chave,fotos:[]};}
+    grupos[k].fotos.push(a.h);
+  }
+  // Fotos sem data da câmera nem data na pasta (PNG, WhatsApp): vão para a visita com mais fotos da mesma pasta; sem nenhuma, usam a data do arquivo
+  semData.forEach(function(x){
+    var alvo=null;Object.keys(grupos).forEach(function(k){var g=grupos[k];if(g.pasta===x.pasta&&(!alvo||g.fotos.length>alvo.fotos.length))alvo=g;});
+    if(!alvo){var dia=isoDia(x.f.lastModified),k=x.pasta+'|'+dia;if(!grupos[k]){var ob=antObra(x.a.cam);grupos[k]={pasta:x.pasta,dia:dia,obra:ob.nome,chave:ob.chave,fotos:[]};}alvo=grupos[k];}
+    alvo.fotos.push(x.a.h);
+  });
+  _antigas=Object.keys(grupos).map(function(k){
+    var g=grupos[k],pp=porPasta[g.pasta]||{txt:[],docx:0};
+    g.txt=pp.txt;g.docx=pp.docx;
+    var ck=g.obra?chaveObra(g.obra):'';
+    g.registrada=!!(ck&&visitasDaObra(g.chave||ck).some(function(v){return v.dataVisita===g.dia;}));
+    return g;
+  }).sort(function(x,y){return x.dia<y.dia?-1:x.dia>y.dia?1:(x.obra<y.obra?-1:1);});
+  renderAntigas();
+}
+function renderAntigas(){
+  var ocultar=document.getElementById('antOcultar').checked;
+  var vis=_antigas.map(function(g,i){g._i=i;return g;}).filter(function(g){return !(ocultar&&g.registrada);});
+  var nReg=_antigas.filter(function(g){return g.registrada;}).length;
+  document.getElementById('antMsg').textContent=_antigas.length+' visita(s) encontrada(s)'+(nReg?' · '+nReg+' já registrada(s)':'')+'. Clique em "Carregar" para montar o RVO.';
+  var h='<table class="reg-tab"><tr><th>Data</th><th>Obra</th><th>Fotos</th><th>Situação</th><th>Pasta</th><th></th></tr>';
+  vis.forEach(function(g){
+    var sit=[];
+    if(g.registrada)sit.push('✓ registrada');
+    if(g.docx)sit.push('📄 '+g.docx+' Word na pasta');
+    if(g.txt.length)sit.push('📝 anotação');
+    if(!g.chave)sit.push('<span style="color:#C0392B">obra fora do Banco</span>');
+    h+='<tr><td>'+fmtData(g.dia)+'</td><td>'+escHtml(g.obra||'?')+'</td><td>'+g.fotos.length+'</td><td>'+sit.join(' · ')+'</td>'+
+      '<td style="color:#8A857C;max-width:260px;overflow:hidden;text-overflow:ellipsis" title="'+escHtml(g.pasta)+'">'+escHtml(g.pasta)+'</td>'+
+      '<td><button class="obra-btn green" style="padding:6px 10px" onclick="carregarAntiga('+g._i+')">Carregar</button></td></tr>';
+  });
+  if(!vis.length)h+='<tr><td colspan="6" style="color:#8A857C">Nenhuma visita pendente nesta pasta.</td></tr>';
+  document.getElementById('antLista').innerHTML=h+'</table>';
+}
+function fecharAntigas(){document.getElementById('antModal').style.display='none';}
+async function carregarAntiga(i){
+  var g=_antigas[i];if(!g)return;
+  if(g.registrada&&!confirm('Esta visita ('+fmtData(g.dia)+') já está registrada para "'+g.obra+'". Carregar mesmo assim (nova revisão)?'))return;
+  fecharAntigas();
+  var mesma=!!(g.chave&&document.getElementById('obraSelect').value===g.chave);
+  novoRelatorio(mesma);
+  if(!mesma){
+    if(g.chave){document.getElementById('obraSelect').value=g.chave;carregarObra();}
+    else{document.getElementById('nomeObra').value=g.obra||'';atualizarBadges();}
+  }
+  document.getElementById('dataVisita').value=g.dia;sugerirVisita();
+  var notas=[];
+  for(var t=0;t<g.txt.length;t++){try{notas.push((await (await g.txt[t].getFile()).text()).trim());}catch(e){}}
+  if(notas.length){var ta=document.getElementById('textoVisitaInput');ta.value=notas.filter(Boolean).join('\n\n');ta.dispatchEvent(new Event('input'));}
+  mostrarMsg('Carregando '+g.fotos.length+' foto(s) de '+fmtData(g.dia)+'…','#1A3A2A');
+  var files=[];for(var f=0;f<g.fotos.length;f++){try{files.push(await g.fotos[f].getFile());}catch(e){}}
+  await addArquivos(files);
+  mostrarMsg('Visita de '+fmtData(g.dia)+' carregada: '+files.length+' foto(s). Escreva ou cole o relato e clique em "Processar com IA".','#1A3A2A');
+  var ta2=document.getElementById('textoVisitaInput');if(ta2){ta2.scrollIntoView({behavior:'smooth',block:'center'});}
+}
 function hhmm(ts){var d=new Date(ts);return pad(d.getHours(),2)+':'+pad(d.getMinutes(),2);}
 function isoDia(ts){var d=new Date(ts);return d.getFullYear()+'-'+pad(d.getMonth()+1,2)+'-'+pad(d.getDate(),2);}
 function sugerirHorarios(){
@@ -2801,6 +2912,17 @@ function esperar(ms){return new Promise(function(r){setTimeout(r,ms);})}
     <div class="reg-head"><b>🔗 Contratos do Gerencial</b><button onclick="fecharGerencial()">✕</button></div>
     <div class="reg-bar"><input id="gerBusca" class="ger-busca" placeholder="Buscar por EP, obra, cliente ou cidade…" oninput="renderGerencial()"></div>
     <div id="gerLista" class="reg-tabela"></div>
+  </div>
+</div>
+<div id="antModal" class="reg-modal" style="display:none" onclick="if(event.target===this)fecharAntigas()">
+  <div class="reg-box">
+    <div class="reg-head"><b>📂 Visitas antigas</b><button onclick="fecharAntigas()">✕</button></div>
+    <div class="reg-bar">
+      <span id="antMsg" style="flex:1;font-size:12.5px;color:#5A564F;align-self:center"></span>
+      <label style="font-size:12.5px;align-self:center"><input type="checkbox" id="antOcultar" checked onchange="renderAntigas()"> ocultar visitas já registradas</label>
+      <button onclick="abrirAntigas(true)">📁 Outra pasta</button>
+    </div>
+    <div id="antLista" class="reg-tabela"></div>
   </div>
 </div>
 <div id="regModal" class="reg-modal" style="display:none" onclick="if(event.target===this)fecharRegistro()">
