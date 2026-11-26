@@ -107,6 +107,8 @@ h2 em{color:#2D6A45;font-style:normal}
 .foto-rev-num{font-size:11px;color:#8A857C}
 .foto-com{width:100%;border:1.5px solid #D4CFC6;border-radius:8px;padding:7px 9px;font-size:12.5px;font-family:inherit;background:#fff;resize:vertical;line-height:1.4}
 .foto-rev input,.foto-rev select{width:100%;border:1.5px solid #D4CFC6;border-radius:8px;padding:7px 9px;font-size:13px;font-family:inherit;background:#fff}
+.auto-item{font-size:13px;padding:5px 0;border-bottom:1px solid #EDE9E2}
+.auto-item:last-child{border-bottom:none}
 .ck-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #EDEAE4}
 .ck-row:last-child{border-bottom:none}
 .ck-label{flex:1;font-size:13px;line-height:1.4}
@@ -406,6 +408,13 @@ h2 em{color:#2D6A45;font-style:normal}
       <div class="visita-info" id="aberturaDados" style="margin:0 0 8px"></div>
       <div class="field" style="margin-bottom:0"><label>Condições do tempo</label><input id="rTempo" placeholder="Ex: ensolarado, superfícies secas" oninput="ia.tempo=this.value;mostrarAbertura()"></div>
       <div class="visita-info" id="aberturaPrev" style="margin:8px 0 0;color:#1A1814"></div>
+    </div>
+  </div>
+  <div class="rev-card" id="cardAuto" style="display:none">
+    <div class="rev-head"><span class="rev-title">🤖 Preenchido a partir do relato</span><span class="rev-tag">confira</span></div>
+    <div class="rev-body">
+      <div class="visita-info" style="margin:0 0 6px">Só campos que estavam vazios. Para corrigir, volte à tela inicial (dados da obra, projeto e notas por local).</div>
+      <div id="rAuto"></div>
     </div>
   </div>
   <div class="modo-bar">
@@ -770,6 +779,14 @@ async function executar(){
     setProg(10,'Texto recebido ✓','Organizando o relatório…');
     setPipe(1,'done', transcricao.length>10 ? 'Texto recebido ✓' : 'Sem texto — ignorado');
 
+    // 1b. Preencher o formulário (notas, Sim/Não, presentes…) a partir do relato — só campos vazios
+    ia.autoPreenchido=[];
+    if(transcricao.length>=20){
+      setProg(12,'Lendo o relato','Preenchendo notas e dados da obra…');
+      try{ia.autoPreenchido=aplicarExtracao(await extrairDoRelato(transcricao));}
+      catch(e){console.warn('Preenchimento automático falhou:',e);}
+    }
+
     // 2. Fotos primeiro: legenda, local e comentário técnico de cada uma
     if(nF>0){
       setPipe(2,'run','Aguardando a análise das fotos…');
@@ -1095,6 +1112,74 @@ async function preencherChecklist(t){
   catch(e){return{};}
 }
 
+// ── PREENCHIMENTO AUTOMÁTICO A PARTIR DO RELATO ──
+// Lê o relato e preenche só o que está VAZIO: presentes, horários, executor, Sim/Não do projeto e notas por local.
+// Nada que o usuário já marcou é sobrescrito. O que foi preenchido fica em ia.autoPreenchido para conferência.
+var SN_OPCOES={possuiProjeto:['SIM','NÃO'],possuiEspec:['-','FAB','PROJ'],adotadoEspec:['PARCIAL','TOTAL'],especialista:['SIM','NÃO'],experiencia:['SIM','NÃO'],materiais:['SIM','NÃO'],depositados:['SIM','NÃO']};
+var SN_ROTULO={possuiProjeto:'Possui projeto específico',possuiEspec:'Especificação técnica',adotadoEspec:'Projeto/especificação adotado',especialista:'Acompanhamento de especialista',experiencia:'Executor com experiência',materiais:'Materiais na obra',depositados:'Materiais depositados corretamente'};
+async function extrairDoRelato(t){
+  if(!t||t.length<20)return null;
+  var nomesLocais=locais.map(function(l){return l.nome;}).filter(Boolean);
+  var prompt='DADOS DA OBRA JÁ PREENCHIDOS\n'+contextoObra()+
+    '\n\nRELATO DA VISITA\n'+t.substring(0,8000)+
+    '\n\nTAREFA\nExtraia do relato os dados abaixo para preencher o formulário do RVO. Use SOMENTE o que o relato afirma; na dúvida, deixe vazio ("").'+
+    '\n- presentes: pessoas que acompanharam a visita, com cargo e empresa entre parênteses quando o relato disser (ex.: "Eng. Allana (Tacla), Sr. João (mestre de obras)").'+
+    '\n- horaChegada / horaSaida: no formato HH:MM, só se o relato informar.'+
+    '\n- executor: empresa aplicadora da impermeabilização.'+
+    '\n- sn: '+Object.keys(SN_OPCOES).map(function(k){return k+' ('+SN_ROTULO[k]+': '+SN_OPCOES[k].join(' | ')+')';}).join('; ')+
+    '. Em possuiEspec, "-" = não possui, FAB = do fabricante, PROJ = do projetista.'+
+    '\n- locais: para cada local/ambiente avaliado no relato, as notas por etapa. Etapas: Proj. (projeto/detalhamento), Regul. (regularização e caimentos), Imp. (camada de impermeabilização e arremates), Teste (teste de estanqueidade), Prot. (proteção mecânica). '+
+    'Notas: 5 = situação superior/conforme, 3 = intermediária (falhas pontuais corrigíveis), 1 = inferior (falha grave ou generalizada), "-" = etapa ainda não executada (só se o relato disser). Atribua nota apenas às etapas sobre as quais o relato dá base; as demais, "".'+
+    (nomesLocais.length?' Locais já cadastrados (use exatamente este nome quando for o mesmo local): '+nomesLocais.join('; ')+'.':'')+
+    '\n\nResponda SOMENTE JSON, sem markdown:\n{"presentes":"","horaChegada":"","horaSaida":"","executor":"","sn":{"possuiProjeto":"","possuiEspec":"","adotadoEspec":"","especialista":"","experiencia":"","materiais":"","depositados":""},"locais":[{"nome":"","notas":{"Proj.":"","Regul.":"","Imp.":"","Teste":"","Prot.":""}}]}';
+  var raw=await claude([{role:'user',content:prompt}],1500,true);
+  var m=String(raw||'').replace(/```json|```/g,'').match(/\{[\s\S]*\}/);
+  if(!m)return null;
+  try{return JSON.parse(m[0]);}catch(e){return null;}
+}
+function aplicarExtracao(d){
+  var feito=[];if(!d)return feito;
+  var campo=function(id,v,rot,re){
+    v=String(v||'').trim();if(!v||val(id))return;
+    if(re&&!re.test(v))return;
+    document.getElementById(id).value=v;feito.push(rot+': '+v);
+  };
+  campo('presentes',d.presentes,'Presentes');
+  campo('horaChegada',d.horaChegada,'Chegada',/^\d{2}:\d{2}$/);
+  campo('horaSaida',d.horaSaida,'Saída',/^\d{2}:\d{2}$/);
+  campo('executor',d.executor,'Executor');
+  atualizarHoras();
+  var sn=d.sn||{};
+  Object.keys(SN_OPCOES).forEach(function(k){
+    var v=String(sn[k]||'').trim().toUpperCase().replace('NAO','NÃO');
+    if(!v||snVals[k]||SN_OPCOES[k].indexOf(v)<0)return;
+    setSNval(k,v);feito.push(SN_ROTULO[k]+': '+v);
+  });
+  (Array.isArray(d.locais)?d.locais:[]).forEach(function(l){
+    var nome=String(l&&l.nome||'').trim();if(!nome)return;
+    var notas=l.notas||{},validas={};
+    COLS.forEach(function(c){var v=String(notas[c]||'').trim();if(['1','3','5','-'].indexOf(v)>=0)validas[c]=v;});
+    var idx=acharLocal(nome);
+    if(idx<0){
+      if(!Object.keys(validas).length)return;
+      locais.push({nome:nome,notas:{}});idx=locais.length-1;feito.push('Local incluído: '+nome);
+    }
+    var loc=locais[idx],postas=[];
+    COLS.forEach(function(c){if(validas[c]&&!loc.notas[c]){loc.notas[c]=validas[c];postas.push(c+' '+validas[c]);}});
+    if(postas.length)feito.push('Notas – '+loc.nome+': '+postas.join(', '));
+  });
+  renderLocais();
+  if(feito.length&&typeof agendarRascunho==='function')agendarRascunho();
+  return feito;
+}
+function mostrarAutoPreenchido(){
+  var card=document.getElementById('cardAuto'),box=document.getElementById('rAuto');if(!card||!box)return;
+  var l=ia.autoPreenchido||[];
+  card.style.display=l.length?'block':'none';
+  box.innerHTML='';
+  l.forEach(function(s){var d=document.createElement('div');d.className='auto-item';d.textContent=s;box.appendChild(d);});
+}
+
 // ── REVISÃO ──
 var modoInicial='tema';
 function setModoInicial(btn,m){
@@ -1124,7 +1209,7 @@ function mostrarAbertura(){
     dd.textContent='Data, horário e participantes vêm da tela de coleta.'+(fotos.length?' Tempo sugerido a partir de '+nExt+' foto(s) externa(s) — ajuste se precisar.':'');}
 }
 function mostrarRevisao(){
-  document.getElementById('rTempo').value=ia.tempo||'';mostrarAbertura();mostrarCaminho();
+  document.getElementById('rTempo').value=ia.tempo||'';mostrarAbertura();mostrarCaminho();mostrarAutoPreenchido();
   escrever('rTexto',ia.textoVisita);
   escrever('rPend',ia.pendencias);
   escrever('rEsc',ia.esclarecimentos);
